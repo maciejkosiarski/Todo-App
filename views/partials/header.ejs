@@ -1,0 +1,13 @@
+<body>
+    <% if (messages.length > 0) { %>
+        <%- messages %>
+    <% } %>
+    <h1><%= page %></h1>
+    <p>Welcome to <%= title %></p>
+    <p>Logged as <%= user.nick %></p>
+    <ul>
+        <li><a href="/tasks">Todo list</a></li>
+        <li><a href="/tasks/completed">Completed</a></li>
+        <li><a href="/notes">Notes</a></li>
+        <li><a href="/auth/out">Logout</a></li>
+    </ul>

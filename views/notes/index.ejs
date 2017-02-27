@@ -1,0 +1,49 @@
+<% include ../partials/head %>
+<% include ../partials/header %>
+  
+    <form method="POST" action="/notes" >
+        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" name='name' value="">
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" rows="4" name='desc'></textarea>
+        </div>
+        <button type="submit" class="btn btn-default">Add note</button>         
+    </form>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-stripped results">
+                <thead>
+                    <th>#</th>
+                    <th>Note</th>
+                    <th>Created</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <% var i = 1; %>
+                <% notes.forEach(function(note){ %>
+                    <tr>
+                        <td><%= i %></td>
+                        <td><a href="#" role="button" data-toggle="modal" data-target="#editModal<%= note._uuid %>"><b><%= note.name %></b></a><% include ../partials/modals/edit_note %></td>
+                        <td><%= moment(new Date(note.created)).format('YYYY-MM-DD HH:mm') %></td>
+                        <td>
+                            <form method="POST" action="/notes" >
+                                <input type="hidden" name="_method" value="delete">
+                                <input type="hidden" name="_uuid" value="<%= note._uuid %>">
+                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                <button type="submit" class="btn btn-default">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% i++; %>
+                <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<% include ../partials/footer %>

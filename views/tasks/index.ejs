@@ -1,0 +1,82 @@
+<% include ../partials/head %>
+<% include ../partials/header %>
+  
+    <form class="form-group" method="POST" action="/tasks" >
+        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" class="form-control" name='name' value="">
+        </div>
+        <button type="submit" class="btn btn-default">Add task</button>         
+    </form>
+
+    <div class="row">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <ul class="nav nav-pills">
+                        <li role="presentation">
+                            <form method="POST" action="tasks/complete/all" >
+                                 <input type="hidden" name="_method" value="put">
+                                 <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                 <button type="submit" class="btn btn-default">Complete all</button>
+                             </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <% var i = 1; %>
+        <% tasks.forEach(function(task){ %>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <ul class="nav nav-pills">
+                        <li role="presentation">
+                           <form method="POST" action="/tasks/complete" >
+                                <input type="hidden" name="_method" value="put">
+                                <input type="hidden" name="_uuid" value="<%= task._uuid %>">
+                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                <button type="submit" class="btn btn-default">Complete</button>
+                            </form> 
+                        </li>
+                        <li role="presentation">
+                            <a href="#" role="button" data-toggle="modal" data-target="#editModal<%= task._uuid %>"><b><%= task.name %></b></a><% include ../partials/modals/edit_task %>
+                        </li>
+                        <li role="presentation">
+                            <a data-toggle="collapse"  href="#collapse<%= i %>">More</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#" role="button" data-toggle="modal" data-target="#addNoteModal<%= task._uuid %>">Add note</a>
+                            <% include ../partials/modals/add_note %>
+                        </li>
+                        <li role="presentation">
+                            <a><%= moment(new Date(task.created)).format('YYYY-MM-DD HH:mm') %></a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="collapse<%= i %>" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <p><b>Description:</b><%= task.desc %></p>
+                    </div>
+                    <div class="panel-footer">
+                        <b>Notes:</b>
+                        <% task.notes.forEach(function(note){ %>
+                            <p><%= note.desc %></p>
+                            <form method="POST" action="/notes" >
+                                <input type="hidden" name="_method" value="delete">
+                                <input type="hidden" name="_uuid" value="<%= note._uuid %>">
+                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                <button type="submit" class="btn btn-default">Remove</button>
+                            </form>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% i++; %>
+        <% }); %>
+        
+    </div>
+
+<% include ../partials/footer %>
