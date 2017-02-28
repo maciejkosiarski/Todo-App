@@ -6,6 +6,8 @@
     <p>Welcome to <%= title %></p>
     <p>Logged as <%= user.nick %></p>
     <ul>
+        <li><button type="button" class="btn btn-info" data-toggle="modal" data-target="#chatModal">Chat</button></li>
+        <% include ../partials/modals/chat %>
         <li><a href="/tasks">Todo list</a></li>
         <li><a href="/tasks/completed">Completed</a></li>
         <li><a href="/notes">Notes</a></li>

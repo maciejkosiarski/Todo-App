@@ -2,7 +2,6 @@ var express         = require('express');
 var path            = require('path');
 var favicon         = require('serve-favicon');
 var logger          = require('morgan');
-var cookieParser    = require('cookie-parser');
 var bodyParser      = require('body-parser');
 var moment          = require('moment');
 var passport        = require('passport');
@@ -27,7 +26,6 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser(config.security.cookie));
 app.use(methodOverride(function(req, res){
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         // look in urlencoded POST bodies and delete it
@@ -82,7 +80,6 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
-
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
