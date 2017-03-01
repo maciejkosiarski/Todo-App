@@ -1,12 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var uuid = require('node-uuid');
 
 var Task = require('../models/task');
 
 /* GET tasks listing. */
 router.get('/', function(req, res) {
-    Task.find({completed:false, _user:req.user._uuid}).sort({created: -1}).populate({ path: 'notes', select: 'desc _uuid'}).exec(function (err, tasks) {
+    Task.find({completed:false, _user:req.user._id}).sort({created: -1}).populate({ path: 'notes', select: 'desc _id'}).exec(function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
             res.redirect('/');
@@ -21,7 +20,7 @@ router.get('/', function(req, res) {
 
 /* GET completed tasks listing. */
 router.get('/completed', function(req, res) {
-    Task.find({completed:true, _user:req.user._uuid}).sort({created: -1}).exec(function (err, tasks) {
+    Task.find({completed:true, _user:req.user._id}).sort({created: -1}).exec(function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
             res.redirect('/');
@@ -37,13 +36,12 @@ router.get('/completed', function(req, res) {
 /* POST new task. */
 router.post('/', function (req, res) {
     var newTask = new Task({
-        _uuid : uuid.v4(),
         name : req.body.name,
-        _user : req.user._uuid
+        _user : req.user._id
     });
     newTask.save(function (err) {
         if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Task was not created.</div>');
+            req.flash('info', '<div class="alert alert-danger">Error. Task was not created.'+err+'</div>');
         } else {
             req.flash('info', '<div class="alert alert-success">Task was successful created.</div>');
         }
@@ -52,7 +50,7 @@ router.post('/', function (req, res) {
 });
 
 router.put('/complete', function (req, res) {
-    Task.findOneAndUpdate({_uuid: req.body._uuid},{$set:{completed: true}}, function (err) {
+    Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: true}}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not complted.</div>');
         } else {
@@ -74,7 +72,7 @@ router.put('/complete/all', function (req, res) {
 });
 
 router.put('/active', function (req, res) {
-    Task.findOneAndUpdate({_uuid: req.body._uuid},{$set:{completed: false}}, function (err) {
+    Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: false}}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not activated.</div>');
         } else {
@@ -96,7 +94,7 @@ router.put('/active/all', function (req, res) {
 });
 
 router.put('/edit', function (req, res) {
-    Task.findOneAndUpdate({_uuid: req.body._uuid},{$set: req.body}, function (err) {
+    Task.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not modified.</div>');
         } else {
@@ -107,7 +105,7 @@ router.put('/edit', function (req, res) {
 });
 
 router.delete('/', function (req, res) {
-    Task.findOne({_uuid: req.body._uuid}, function (err, task) {
+    Task.findOne({_id: req.body._id}, function (err, task) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not removed.</div>');
         } else {

@@ -11,91 +11,45 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script>
-//        $(document).ready(function(){
-//            var username;
-//            var socket = io();
-//
-//            socket.on('user', function(user, err){
-//                if(err) throw err;
-//                console.log(err);
-//                username = user;
-//            });
-//
-//            socket.on('messages', function(messages, err){
-//                if(messages.length) {
-//                    for(var i = 0; i < messages.length; i++){
-//                        var html = '<div class="row message-bubble">';
-//                        html += '<p class="text-muted">'+ messages[i]._user.name +' '+ messages[i].created +'</p>';
-//                        html += '<span>'+ messages[i].content +'</span>';
-//                        html += '</div>';
-//                        $('#messages').append(html);
-//                    }
-//                }
-//            });
-//            if(showCookie("user")){
-//                $('.panel-heading').text(username);
-//
-//                $('#chatForm').submit(function(){
-//                    socket.emit('chat message', {
-//                        message: $('#message').val(),
-//                        userid: showCookie("user")
-//                    });
-//
-//                    $('#message').val('');
-//                    return false;
-//               });
-//
-//               socket.on('chat message', function(msg){
-//                    var html = '<div class="row message-bubble">';
-//                        html += '<p class="text-muted">'+ msg.author +' '+ msg.created +'</p>';
-//                        html += '<span>'+ msg.content +'</span>';
-//                        html += '</div>';
-//                    $('#messages').append(html);
-//                    $("html, body").scrollTop($(document).height());
-//                });
-//
-//            } else {
-//                $('#nameForm').submit(function(){
-//                username = $('#nameInput').val();
-//
-//                    socket.emit('new user', {
-//                        name: username
-//                    });
-//                    socket.on('cookie', function(data, err) {
-//                        document.cookie = 'user=' + data;
-//                    });
-//
-//                    $('.panel-heading').text(username);
-//
-//                    $('#startModal').modal('hide');
-//
-//                    $('#chatForm').submit(function(){
-//                        socket.emit('chat message', {
-//                            message: $('#message').val(),
-//                            userid: showCookie("user")
-//                        });
-//
-//                        $('#message').val('');
-//                        return false;
-//                   });
-//
-//                    socket.on('chat message', function(msg){
-//                        var html = '<div class="row message-bubble">';
-//                            html += '<p class="text-muted">'+ msg.author +' '+ msg.created +'</p>';
-//                            html += '<span>'+ msg.content +'</span>';
-//                            html += '</div>';
-//                        $('#messages').append(html);
-//                        $("html, body").scrollTop($(document).height());
-//                    });
-//
-//                    socket.on('er', function(er){
-//                        alert(er);
-//                    });
-//
-//                    return false;
-//                });
-//            }
-//        });
+        $(document).ready(function(){
+            var socket = io();
+            
+            $('#chatForm').submit(function(){
+                socket.emit('chat message', {
+                    message: $('#message').val(),
+                    user: $('#user').val()
+                });
+
+                $('#message').val('');
+                return false;
+           });
+
+            socket.on('chat message', function(msg){
+                var html = '<div class="row message-bubble">';
+                    html += '<p class="text-muted">'+ msg.user +' '+ msg.created +'</p>';
+                    html += '<span>'+ msg.content +'</span>';
+                    html += '</div>';
+                $('#messages').append(html);
+                $("html, body").scrollTop($(document).height());
+            });
+
+            socket.on('output', function(messages, err){
+                if(messages.length) {
+                    for(var i = 0; i < messages.length; i++){
+                        var html = '<div class="row message-bubble">';
+                        html += '<p class="text-muted">'+ messages[i]._user.nick +' '+ messages[i].created +'</p>';
+                        html += '<span>'+ messages[i].content +'</span>';
+                        html += '</div>';
+                        $('#messages').append(html);
+                    }
+                }
+            });
+            
+            socket.on('er', function(er){
+                alert(er);
+            });
+
+        });
     </script>
 </body>
 </html>

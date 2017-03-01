@@ -39,7 +39,7 @@
                         <td>
                             <form method="POST" action="/users" >
                                 <input type="hidden" name="_method" value="delete">
-                                <input type="hidden" name="_uuid" value="<%= user._uuid %>">
+                                <input type="hidden" name="_id" value="<%= user._id %>">
                                 <input type="hidden" name="_csrf" value="<%= _csrf %>">
                                 <button type="submit" class="btn btn-default">Remove</button>
                             </form>

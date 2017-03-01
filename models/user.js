@@ -1,11 +1,13 @@
 var sha1 = require('locutus/php/strings/sha1');
 var mongoose = require('mongoose');
+var uuid = require('node-uuid');
+
 var config = require('../config/app.js');
 var Task = require('../models/task');
 var Note = require('../models/note');
 
 var userSchema = mongoose.Schema({
-    _uuid: {type: String, default: ""},
+    _id: {type: String, unique : true, default: uuid.v4},
     nick: {type: String, unique : true, default: ""},
     email: {type: String, default: ""},
     pass: {type: String, default: ""},
@@ -38,9 +40,8 @@ userSchema.statics.validPassword = function(password, userPassword){
 };
 
 userSchema.pre('remove', function (next) {
-    console.log('wlazlo');
-    Note.remove({_user: this._uuid}).exec();
-    Task.find({_user: this._uuid}, function(err, tasks){
+    Note.remove({_user: this._id}).exec();
+    Task.find({_user: this._id}, function(err, tasks){
         for(var i = 0; i < tasks.length; i++){
             tasks[i].remove();
         }

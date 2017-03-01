@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var uuid = require('node-uuid');
 
 var User = require('../models/user');
 
@@ -22,7 +21,6 @@ router.get('/', function(req, res) {
 /* POST new user. */
 router.post('/', function (req, res) {
     var newUser = new User({
-        _uuid : uuid.v4(),
         nick : req.body.nick,
         pass : User.generateHash(req.body.pass)
     });
@@ -37,7 +35,7 @@ router.post('/', function (req, res) {
 });
 
 router.put('/', function (req, res) {
-    User.findOneAndUpdate({_uuid: req.body._uuid},{$set: req.body}, function (err) {
+    User.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Your data was not modified.</div>');
         } else {
@@ -48,7 +46,7 @@ router.put('/', function (req, res) {
 });
 
 router.delete('/', function (req, res) {
-    User.findOne({_uuid: req.body._uuid}, function (err, user) {
+    User.findOne({_id: req.body._id}, function (err, user) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. User was not removed.</div>');
         } else {

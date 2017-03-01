@@ -1,9 +1,10 @@
 var mongoose = require('mongoose');
+var uuid = require('node-uuid');
 
 var messageSchema = mongoose.Schema({
-    _uuid: {type: String, default: ""},
-    content: {type: String, default: ""},
+    _id: {type: String, unique : true, default: uuid.v4},
     _user: {type: String, ref: 'User', default: false},
+    content: {type: String, default: ""},
     created: {type: Date, default: Date.now}
 });
 

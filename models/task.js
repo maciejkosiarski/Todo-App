@@ -1,12 +1,14 @@
 var mongoose = require('mongoose');
+var uuid = require('node-uuid');
+
 var Note = require('./note');
 
 var taskSchema = mongoose.Schema({
-    _uuid: {type: String, default: ""},
+    _id: {type: String, unique : true, default: uuid.v4},
+    _user : {type: String, ref: 'User'},
     name: {type: String, default: ""},
     desc: {type: String, default: ""},
-    notes: [{ type:  mongoose.Schema.Types.ObjectId, ref: 'Note' }],
-    _user : {type: String, ref: 'User'},
+    notes: [{ type:  String, ref: 'Note' }],
     completed: {type: Boolean, default: false},
     created: {type: Date, default: Date.now},
     modified: {type: Date, default: Date.now}
@@ -25,7 +27,7 @@ taskSchema.pre('update', function (next) {
 });
 
 taskSchema.pre('remove', function (next) {
-    Note.remove({_task: this._uuid }).exec();
+    Note.remove({_task: this._id }).exec();
     next();
 });
 

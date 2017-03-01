@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div id="editModal<%=task._uuid%>" class="modal fade" role="dialog">
+<div id="editModal<%=task._id%>" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -12,7 +12,7 @@
             </div>
             <form method="POST" action="/tasks/edit" >
                 <input type="hidden" name="_method" value="put">
-                <input type="hidden" name="_uuid" value="<%= task._uuid %>">
+                <input type="hidden" name="_id" value="<%= task._id %>">
                 <input type="hidden" name="_csrf" value="<%= _csrf %>">
                 <div class="modal-body">
                     <div class="row">
