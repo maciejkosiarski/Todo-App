@@ -4,7 +4,7 @@ var uuid = require('node-uuid');
 var Note = require('./note');
 
 var taskSchema = mongoose.Schema({
-    _id: {type: String, unique : true, default: uuid.v4},
+    _id: {type: String, default: uuid.v4},
     _user : {type: String, ref: 'User'},
     name: {type: String, default: ""},
     desc: {type: String, default: ""},

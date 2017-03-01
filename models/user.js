@@ -7,7 +7,7 @@ var Task = require('../models/task');
 var Note = require('../models/note');
 
 var userSchema = mongoose.Schema({
-    _id: {type: String, unique : true, default: uuid.v4},
+    _id: {type: String, default: uuid.v4},
     nick: {type: String, unique : true, default: ""},
     email: {type: String, default: ""},
     pass: {type: String, default: ""},
