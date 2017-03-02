@@ -5,15 +5,16 @@
  */
 
 var app = require('../server');
-var session = require('../config/session');
 var debug = require('debug')('Todo-App:server');
 var http = require('http');
+
+var config = require('../config/app');
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '8080');
+var port = normalizePort(process.env.PORT || config.app.port);
 app.set('port', port);
 
 /**
