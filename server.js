@@ -1,4 +1,5 @@
 var express         = require('express');
+var socketIo        = require('socket.io');
 var path            = require('path');
 var favicon         = require('serve-favicon');
 var logger          = require('morgan');
@@ -8,22 +9,26 @@ var passport        = require('passport');
 var mongoose        = require('mongoose');
 var methodOverride  = require('method-override');
 var flash           = require('connect-flash');
-var session         = require('express-session');
 var csrf            = require('csurf');
 
+var session = require('./config/session');
 var routes  = require('./routes');
 var config  = require('./config/app');
 
 var app = express();
 
+var io  = socketIo();
+app.io  = io;
+
 app.set('env', config.app.env);
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+if (app.get('env') === 'development') {
+    app.use(logger('dev'));
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride(function(req, res){
@@ -35,11 +40,7 @@ app.use(methodOverride(function(req, res){
     }
 }));
 
-app.use(session({
-    secret: config.security.session,
-    resave: true,
-    saveUninitialized: true
-}));
+app.use(session);
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -47,6 +48,8 @@ app.use(csrf());
 app.use(function(req, res, next) {
     res.locals._csrf = req.csrfToken();
     res.locals.user = req.user;
+    req.session.user = req.user;
+    req.session.save();
     return next();
 });
 
@@ -60,6 +63,14 @@ app.use('/users', routes.users);
 app.use('/tasks', routes.tasks);
 app.use('/notes', routes.notes);
 
+io.use(function(socket, next){
+    session(socket.request, socket.request.res, next);
+});
+
+io.on( "connection", function(socket){
+    require('./routes/chat')(socket, io);
+});
+
 var options = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }, 
                 replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS : 30000 } } };
 
@@ -68,9 +79,12 @@ mongoose.connect(config.database.mongodb.url, options);
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-    console.log('db conected');
-});
+if (app.get('env') === 'development') {
+    db.once('open', function() {
+        console.log('db conected');
+    });
+}
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

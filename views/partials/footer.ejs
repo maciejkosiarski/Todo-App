@@ -14,26 +14,7 @@
         $(document).ready(function(){
             var socket = io();
             
-            $('#chatForm').submit(function(){
-                socket.emit('chat message', {
-                    message: $('#message').val(),
-                    user: $('#user').val()
-                });
-
-                $('#message').val('');
-                return false;
-           });
-
-            socket.on('chat message', function(msg){
-                var html = '<div class="row message-bubble">';
-                    html += '<p class="text-muted">'+ msg.user +' '+ msg.created +'</p>';
-                    html += '<span>'+ msg.content +'</span>';
-                    html += '</div>';
-                $('#messages').append(html);
-                $("html, body").scrollTop($(document).height());
-            });
-
-            socket.on('output', function(messages, err){
+            socket.on('messages', function(messages, err){
                 if(messages.length) {
                     for(var i = 0; i < messages.length; i++){
                         var html = '<div class="row message-bubble">';
@@ -45,8 +26,42 @@
                 }
             });
             
+            socket.on('users', function(users, err){
+                if(users.length) {
+                    for(var i = 0; i < users.length; i++){
+                        $('#users').append('<li>'+users[i].nick+'</li>');
+                    }
+                }
+            });
+            
+            socket.on('user', function(user, err){
+                $('#users').append('<li>'+user+'</li>');
+            });
+            
+            $('#chatForm').submit(function(){
+                socket.emit('chat message', {
+                    message: $('#message').val()
+                });
+
+                $('#message').val('');
+                return false;
+           });
+
+            socket.on('chat message', function(msg){
+                var html = '<div class="row message-bubble">';
+                    html += '<p class="text-muted">'+ msg.user +' '+ msg.created +'</p>';
+                    html += '<span>'+ msg.content +'</span>';
+                    html += '</div>';
+                $('#messages').append(html);      
+                $("html, body").scrollTop($(document).height());
+            });
+            
+            socket.on('disconect', function(user, er){
+                $('li:contains("'+user+'")').remove();
+            });
+
             socket.on('er', function(er){
-                alert(er);
+                $('#info').append('<div class="alert alert-danger">'+er+'</div>');
             });
 
         });

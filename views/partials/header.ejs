@@ -1,7 +1,9 @@
 <body>
-    <% if (messages.length > 0) { %>
-        <%- messages %>
-    <% } %>
+    <div id="info">
+        <% if (messages.length > 0) { %>
+            <%- messages %>
+        <% } %>
+    </div>
     <h1><%= page %></h1>
     <p>Welcome to <%= title %></p>
     <p>Logged as <%= user.nick %></p>

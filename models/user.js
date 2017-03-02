@@ -12,6 +12,7 @@ var userSchema = mongoose.Schema({
     email: {type: String, default: ""},
     pass: {type: String, default: ""},
     admin: {type: Boolean, default: false},
+    logged: {type: Boolean, default: false},
     created: {type: Date, default: Date.now},
     modified: {type: Date, default: Date.now}
 });

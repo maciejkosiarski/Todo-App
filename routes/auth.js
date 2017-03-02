@@ -19,9 +19,15 @@ router.post('/login', passport.authenticate('local-login', {
 ));
 
 router.get('/out', function (req, res) {
-    req.logout();
-    req.flash('info', '<div class="alert alert-success">Bye</div>');
-    res.redirect('/auth/login');
+    User.update({_id:req.user._id},{$set:{logged: false}}, function (err) {
+        if(err){
+            req.flash('info', '<div class="alert alert-danger">Cant logout. '+err+'</div>'); 
+        } else{
+            req.logout();
+            req.flash('info', '<div class="alert alert-success">Bye</div>'); 
+        }
+        res.redirect('/auth/login');
+    });
 });
 
 module.exports = router;

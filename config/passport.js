@@ -26,7 +26,15 @@ module.exports = function(passport){
                     return done(null, false, req.flash('info', '<div class="alert alert-danger">Invalid password.</div>'));
                 }
                 req.flash('info', '<div class="alert alert-success">Hello!</div>');
-                return done(null, user);
+                user.logged = true;
+                user.save(function (err) {
+                    if (err) { 
+                        return done(null, false, req.flash('info', '<div class="alert alert-danger">User not found.</div>'));
+                    }
+                    else {
+                        return done(null, user);
+                    }
+                });
             }).catch(function(err) {
                 console.error(err);
             });
