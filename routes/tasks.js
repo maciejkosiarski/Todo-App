@@ -35,18 +35,22 @@ router.get('/completed', function(req, res) {
 
 /* POST new task. */
 router.post('/', function (req, res) {
-    var newTask = new Task({
-        name : req.body.name,
-        _user : req.user._id
-    });
-    newTask.save(function (err) {
-        if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Task was not created.'+err+'</div>');
-        } else {
-            req.flash('info', '<div class="alert alert-success">Task was successful created.</div>');
-        }
-        res.redirect('/tasks');
-    });
+    if(req.body.name === '') {
+        req.flash('info', '<div class="alert alert-danger">Invalid data.</div>');
+    } else {
+        var newTask = new Task({
+            name : req.body.name,
+            _user : req.user._id
+        });
+        newTask.save(function (err) {
+            if (err) {
+                req.flash('info', '<div class="alert alert-danger">Error. Task was not created.'+err+'</div>');
+            } else {
+                req.flash('info', '<div class="alert alert-success">Task was successful created.</div>');
+            }
+        });
+    }
+    res.redirect('/tasks');
 });
 
 router.put('/complete', function (req, res) {

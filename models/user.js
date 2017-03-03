@@ -29,15 +29,15 @@ userSchema.pre('update', function (next) {
     next();
 });
 
-userSchema.statics.generateHash = function(password){
+userSchema.methods.generateHash = function(password){
     return sha1(config.security.salt+password);
 };
 
-userSchema.statics.validPassword = function(password, userPassword){
+userSchema.methods.validPassword = function(password, userPassword){
     if(this.generateHash(password) == userPassword){
-        return false;
+        return true;
     }
-    return true;
+    return false;
 };
 
 userSchema.pre('remove', function (next) {

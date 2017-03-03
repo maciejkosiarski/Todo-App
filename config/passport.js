@@ -17,12 +17,12 @@ module.exports = function(passport){
             passwordField: 'pass',
             passReqToCallback : true
         },
-        function(req, username, password, done) {
-            User.findOne({nick: username}, function (err, user) {
+        function(req, nick, pass, done) {
+            User.findOne({nick: nick}, function (err, user) {
                 if (err)  return done(err);
                 if (!user) return done(null, false, req.flash('info', '<div class="alert alert-danger">User not found.</div>'));
 
-                if(User.validPassword(password, user.pass)){
+                if(!user.validPassword(pass, user.pass)){
                     return done(null, false, req.flash('info', '<div class="alert alert-danger">Invalid password.</div>'));
                 }
                 req.flash('info', '<div class="alert alert-success">Hello!</div>');

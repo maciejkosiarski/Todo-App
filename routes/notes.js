@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var Note = require('../models/note');
+var Task = require('../models/task');
 
 /* GET notes listing. */
 router.get('/', function(req, res) {
@@ -23,36 +24,48 @@ router.get('/', function(req, res) {
 router.post('/', function (req, res) {
     //create note to specific task
     if(req.body._id){
-        var newNote = new Note({
-            name : task.name,
-            desc : req.body.desc,
-            _task : task._id
-        });
-        newNote.save(function (err, note) {
-            if (err) {
+        Task.findById(req.body._id, function (err, task) {
+            if(err || req.body.desc === ''){
                 req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
             } else {
-                task.notes.push(note._id);
-                task.save();
-                req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
+                var newNote = new Note({
+                    name : task.name,
+                    desc : req.body.desc,
+                    _task : task._id
+                });
+                newNote.save(function (err, note) {
+                    if (err) {
+                        req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
+                    } else {
+                        task.notes.push(note._id);
+                        task.save();
+                        req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
+                    }
+
+                });
             }
             res.redirect('/tasks');
         });
     //create single independent note
     } else {
-        var newNote = new Note({
-            name : req.body.name,
-            desc : req.body.desc,
-            _user : req.user._id
-        });
-        newNote.save(function (err, note) {
-            if (err) {
-                req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
-            } else {
-                req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
-            }
-            res.redirect('/notes');
-        });
+        if(req.body.name === '' || req.body.desc === ''){
+            req.flash('info', '<div class="alert alert-danger">Error. Note was not created. Invalid data.</div>');
+        } else {
+            var newNote = new Note({
+                name : req.body.name,
+                desc : req.body.desc,
+                _user : req.user._id
+            });
+            newNote.save(function (err, note) {
+                if (err) {
+                    req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
+                } else {
+                    req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
+                }
+
+            });
+        }
+        res.redirect('/notes');
     }
 });
 

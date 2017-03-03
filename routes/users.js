@@ -20,18 +20,25 @@ router.get('/', function(req, res) {
 
 /* POST new user. */
 router.post('/', function (req, res) {
-    var newUser = new User({
-        nick : req.body.nick,
-        pass : User.generateHash(req.body.pass)
-    });
-    newUser.save(function (err, note) {
-        if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error: '+err.message+' User was not created.</div>');
-        } else {
-            req.flash('info', '<div class="alert alert-success">User was successful created.</div>');
-        }
-        res.redirect('/users');
-    });
+    req.checkBody('nick', 'Invalid nick').notEmpty().isAlphanumeric();
+    req.checkBody('pass', 'Invalid pass').notEmpty().isLength({min:8});
+    var errors = req.validationErrors();
+    if(errors) {
+        req.flash('info', '<div class="alert alert-danger">Invalid data. Nick(alphanumeric) and pass(length more than 7 char) cant be empty.</div>');
+    } else {
+        var newUser = new User({
+            nick : req.body.nick
+        });
+        newUser.pass = newUser.generateHash(req.body.pass);
+        newUser.save(function (err, note) {
+            if (err) {
+                req.flash('info', '<div class="alert alert-danger">Error: '+err.message+' User was not created.</div>');
+            } else {
+                req.flash('info', '<div class="alert alert-success">User was successful created.</div>');
+            }
+        });
+    }
+    res.redirect('/users');
 });
 
 router.put('/', function (req, res) {

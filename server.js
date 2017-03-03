@@ -10,6 +10,7 @@ var mongoose        = require('mongoose');
 var methodOverride  = require('method-override');
 var flash           = require('connect-flash');
 var csrf            = require('csurf');
+var validator       = require('express-validator');
 
 var session = require('./config/session');
 var routes  = require('./routes');
@@ -31,6 +32,7 @@ if (app.get('env') === 'development') {
 }
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(validator());
 app.use(methodOverride(function(req, res){
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         // look in urlencoded POST bodies and delete it
