@@ -12,11 +12,18 @@ var flash           = require('connect-flash');
 var csrf            = require('csurf');
 var validator       = require('express-validator');
 
-var session = require('./config/session');
-var routes  = require('./routes');
+var app = express();
+
 var config  = require('./config/app');
 
-var app = express();
+mongoose.Promise = global.Promise;
+mongoose.connect(config.database.mongodb.url, config.database.mongodb.options);
+
+var dbConnection = mongoose.connection;
+dbConnection.on('error', console.error.bind(console, 'connection error:'));
+
+var session = require('./config/session')(dbConnection);
+var routes  = require('./routes');
 
 var io  = socketIo();
 app.io  = io;
@@ -49,9 +56,7 @@ app.use(passport.session());
 app.use(csrf());
 app.use(function(req, res, next) {
     res.locals._csrf = req.csrfToken();
-    res.locals.user = req.user;
-    req.session.user = req.user;
-    req.session.save();
+    res.locals.session = req.session;
     return next();
 });
 
@@ -73,20 +78,11 @@ io.on( "connection", function(socket){
     require('./routes/chat')(socket, io);
 });
 
-var options = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }, 
-                replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS : 30000 } } };
-
-mongoose.Promise = global.Promise;
-mongoose.connect(config.database.mongodb.url, options);
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
 if (app.get('env') === 'development') {
-    db.once('open', function() {
+    dbConnection.once('open', function() {
         console.log('db conected');
     });
 }
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

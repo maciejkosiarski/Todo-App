@@ -13,7 +13,6 @@
     <script>
         $(document).ready(function(){
             var socket = io();
-            
             socket.on('messages', function(messages, err){
                 if(messages.length) {
                     for(var i = 0; i < messages.length; i++){

@@ -5,13 +5,13 @@ var passport = require('passport');
 var User = require('../models/user');
 require('../config/passport.js')(passport);
 
-router.get('/login', function(req, res, next) {
+router.get('/login', notLoggedIn, function(req, res, next) {
     res.render('auth/login', {
         messages: req.flash('info')
     });
 });
 
-router.post('/login', passport.authenticate('local-login', {
+router.post('/login', notLoggedIn, passport.authenticate('local-login', {
         successRedirect: '/tasks', 
         failureRedirect: '/auth/login', 
         failureFlash: true
@@ -31,3 +31,10 @@ router.get('/out', function (req, res) {
 });
 
 module.exports = router;
+
+function notLoggedIn(req, res, next){
+    if(!req.isAuthenticated()){
+        return next();
+    }
+    res.redirect('/tasks');
+}
