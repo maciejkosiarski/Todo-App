@@ -2,7 +2,7 @@ var User = require('../models/user');
 var Message = require('../models/message');
 
 module.exports = function(socket, io){  
-    var user = socket.request.session.user.nick;
+    var user = socket.request.session.passport.user.nick;
     Message.find().populate('_user').exec(function(err, messages) {
         if(err) throw err;
         socket.emit('messages', messages);
@@ -11,7 +11,7 @@ module.exports = function(socket, io){
     User.find({logged:true, nick : {$ne: user}}, '-_id nick', null, function(err, users){
         if(err) throw err;
         socket.emit('users', users);
-        io.emit('user', socket.request.session.user.nick);
+        io.emit('user', socket.request.session.passport.user.nick);
     });
 
     socket.on('chat message', function(msg) {
@@ -27,7 +27,7 @@ module.exports = function(socket, io){
                 if (err) throw err;
 
                 io.emit('chat message', {
-                    user:socket.request.session.user.nick,
+                    user:socket.request.session.passport.user.nick,
                     content:message.content,
                     created:message.created
                 });               

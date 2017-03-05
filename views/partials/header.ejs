@@ -6,11 +6,11 @@
     </div>
     <h1><%= page %></h1>
     <p>Welcome to <%= title %></p>
-    <p>Logged as <%= session.user.nick %></p>
+    <p>Logged as <%= session.passport.user.nick %></p>
     <ul>
         <li><button type="button" class="btn btn-info" data-toggle="modal" data-target="#chatModal">Chat</button></li>
         <% include ../partials/modals/chat %>
-        <% if(session.user.admin){ %>
+        <% if(session.passport.user.admin){ %>
             <li><a href="/users">Users</a></li>
         <% } %>
         <li><a href="/tasks">Todo list</a></li>
