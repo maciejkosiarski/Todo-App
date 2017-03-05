@@ -8,7 +8,7 @@ var app = require('../server');
 var debug = require('debug')('Todo-App:server');
 var http = require('http');
 
-//var config = require('../config/app');
+var config = require('../config/app');
 
 /**
  * Get port from environment and store in Express.
