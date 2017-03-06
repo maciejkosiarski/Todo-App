@@ -60,7 +60,7 @@
                     <div class="panel-body">
                         <p><b>Description:</b><%= task.desc %></p>
                         <b>Subtasks:</b>
-                        <ul>
+                        <ul id="<%= task._id %>">
                             <% task.subtasks.forEach(function(subtask){ %>
                                 <li>
                                     <span <% if(subtask.completed){%>style="text-decoration: line-through"<% } %>><%= subtask.name %></span>
@@ -111,5 +111,29 @@
         <% }); %>
         
     </div>
-
+    <script>
+        $(document).ready(function(){
+            $('#subtaskForm').submit(function(e){
+                e.preventDefault();
+                var data = {};
+                data.name = $('#subtaskForm input[name=name]').val();
+                data._id = $('#subtaskForm input[name=_id]').val();
+                data._csrf = $('#subtaskForm input[name=_csrf]').val();
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    url: '/subtasks',						
+                    success: function(res) {
+                        console.log(res.subtask);
+                        $('#info').append(res.info);
+                        var html = '<li><span>'+res.subtask.name+'</span> ';
+                        html += '<form style="display:inline" method="POST" action="/subtasks/complete" ><input type="hidden" name="_method" value="put"><input type="hidden" name="_id" value="'+res.subtask._task+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Complete</button></form> ';
+                        html += '<form style="display:inline" method="POST" action="/subtasks" ><input type="hidden" name="_method" value="delete"><input type="hidden" name="_id" value="'+res.subtask._task+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Remove</button></form></li>';
+                        $('#'+res.subtask._task).append(html);
+                    }
+                });
+            });
+        });
+    </script>
 <% include ../partials/footer %>

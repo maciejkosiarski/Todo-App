@@ -37,6 +37,7 @@ router.get('/completed', function(req, res) {
 router.post('/', function (req, res) {
     if(req.body.name === '') {
         req.flash('info', '<div class="alert alert-danger">Invalid data.</div>');
+        res.redirect('/tasks');
     } else {
         var newTask = new Task({
             name : req.body.name,
@@ -48,9 +49,9 @@ router.post('/', function (req, res) {
             } else {
                 req.flash('info', '<div class="alert alert-success">Task was successful created.</div>');
             }
+            res.redirect('/tasks');
         });
     }
-    res.redirect('/tasks');
 });
 
 router.put('/complete', uuidValid, function (req, res) {
@@ -65,7 +66,7 @@ router.put('/complete', uuidValid, function (req, res) {
 });
 
 router.put('/complete/all', function (req, res) {
-    Task.update({completed: false},{$set:{completed: true}}, {multi: true}, function (err) {
+    Task.update({completed: false, _user:req.session.passport.user._id},{$set:{completed: true}}, {multi: true}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not complted.</div>');
         } else {
@@ -87,7 +88,7 @@ router.put('/active', uuidValid, function (req, res) {
 });
 
 router.put('/active/all', function (req, res) {
-    Task.update({completed: true},{$set:{completed: false}}, {multi: true}, function (err) {
+    Task.update({completed: true, _user:req.session.passport.user._id},{$set:{completed: false}}, {multi: true}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not activated.</div>');
         } else {
@@ -121,7 +122,7 @@ router.delete('/', uuidValid, function (req, res) {
 });
 
 router.delete('/all', function (req, res) {
-    Task.find({ completed: true }, function (err, tasks) {
+    Task.find({ completed: true, _user:req.session.passport.user._id }, function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not removed.</div>');
         } else {

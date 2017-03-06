@@ -24,24 +24,30 @@ var Subtask = require('../models/subtask');
 router.post('/', uuidValid, function (req, res) {
     //create subtask to specific task
     Task.findById(req.body._id, function (err, task) {
+
         if(err || req.body.name === ''){
-            req.flash('info', '<div class="alert alert-danger">Error. Subtask was not created.</div>');
+           var info = '<div class="alert alert-danger">Error. Subtask was not created.</div>';
+           res.send(info);
         } else {
             var newSubtask = new Subtask({
                 name : req.body.name,
                 _task : task._id
             });
             newSubtask.save(function (err, subtask) {
+                var info = '';
                 if (err) {
-                    req.flash('info', '<div class="alert alert-danger">Error. Subtask was not created.</div>');
+                    info = '<div class="alert alert-danger">Error. Subtask was not created.</div>';
                 } else {
                     task.subtasks.push(subtask._id);
                     task.save();
-                    req.flash('info', '<div class="alert alert-success">Subtask was successful created.</div>');
+                    info = '<div class="alert alert-success">Subtask was successful created.</div>';
                 }
+                var data = {};
+                data.info = info;
+                data.subtask = subtask;
+                res.send(data);
             });
         }
-        res.redirect('/tasks');
     });
 });
 
