@@ -41,10 +41,11 @@
                             </form> 
                         </li>
                         <li role="presentation">
-                            <a href="#" role="button" data-toggle="modal" data-target="#editModal<%= task._id %>"><b><%= task.name %></b></a><% include ../partials/modals/edit_task %>
+                            <a data-toggle="collapse"  href="#collapse<%= i %>"><b><%= task.name %></b></a>
                         </li>
                         <li role="presentation">
-                            <a data-toggle="collapse"  href="#collapse<%= i %>">More</a>
+                            <a href="#" role="button" data-toggle="modal" data-target="#editModal<%= task._id %>">Edit</a>
+                            <% include ../partials/modals/edit_task %>
                         </li>
                         <li role="presentation">
                             <a href="#" role="button" data-toggle="modal" data-target="#addNoteModal<%= task._id %>">Add</a>
