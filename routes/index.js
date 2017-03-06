@@ -1,6 +1,7 @@
 exports.auth = require('./auth');
 exports.users = require('./users');
 exports.tasks = require('./tasks');
+exports.subtasks = require('./subtasks');
 exports.notes = require('./notes');
 exports.authCheck = function(req, res, next){
     if (req.user || req.path==='/auth/login') {

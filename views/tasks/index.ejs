@@ -47,8 +47,8 @@
                             <a data-toggle="collapse"  href="#collapse<%= i %>">More</a>
                         </li>
                         <li role="presentation">
-                            <a href="#" role="button" data-toggle="modal" data-target="#addNoteModal<%= task._id %>">Add note</a>
-                            <% include ../partials/modals/add_note %>
+                            <a href="#" role="button" data-toggle="modal" data-target="#addNoteModal<%= task._id %>">Add</a>
+                            <% include ../partials/modals/add %>
                         </li>
                         <li role="presentation">
                             <a><%= moment(new Date(task.created)).format('YYYY-MM-DD HH:mm') %></a>
@@ -58,17 +58,49 @@
                 <div id="collapse<%= i %>" class="panel-collapse collapse">
                     <div class="panel-body">
                         <p><b>Description:</b><%= task.desc %></p>
+                        <b>Subtasks:</b>
+                        <ul>
+                            <% task.subtasks.forEach(function(subtask){ %>
+                                <li>
+                                    <span <% if(subtask.completed){%>style="text-decoration: line-through"<% } %>><%= subtask.name %></span>
+                                    <% if(subtask.completed){%>
+                                        <form style="display:inline" method="POST" action="/subtasks/active" >
+                                            <input type="hidden" name="_method" value="put">
+                                            <input type="hidden" name="_id" value="<%= subtask._id %>">
+                                            <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                            <button type="submit" class="btn btn-default">Active</button>
+                                        </form>
+                                    <% } else { %>
+                                        <form style="display:inline" method="POST" action="/subtasks/complete" >
+                                            <input type="hidden" name="_method" value="put">
+                                            <input type="hidden" name="_id" value="<%= subtask._id %>">
+                                            <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                            <button type="submit" class="btn btn-default">Complete</button>
+                                        </form>
+                                    <% } %>
+                                    <form style="display:inline" method="POST" action="/subtasks" >
+                                        <input type="hidden" name="_method" value="delete">
+                                        <input type="hidden" name="_id" value="<%= subtask._id %>">
+                                        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                        <button type="submit" class="btn btn-default">Remove</button>
+                                    </form>
+                                </li>
+                            <% }); %>
+                        </ul>
+                        
                     </div>
                     <div class="panel-footer">
                         <b>Notes:</b>
                         <% task.notes.forEach(function(note){ %>
-                            <p><%= note.desc %></p>
-                            <form method="POST" action="/notes" >
-                                <input type="hidden" name="_method" value="delete">
-                                <input type="hidden" name="_id" value="<%= note._id %>">
-                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                <button type="submit" class="btn btn-default">Remove</button>
-                            </form>
+                            <li>
+                                <%= note.desc %>
+                                <form style="display:inline" method="POST" action="/notes" >
+                                    <input type="hidden" name="_method" value="delete">
+                                    <input type="hidden" name="_id" value="<%= note._id %>">
+                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                    <button type="submit" class="btn btn-default">Remove</button>
+                                </form>
+                            </li>    
                         <% }); %>
                     </div>
                 </div>

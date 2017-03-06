@@ -68,6 +68,7 @@ app.use(routes.authCheck);
 app.use('/auth', routes.auth);
 app.use('/users', routes.users);
 app.use('/tasks', routes.tasks);
+app.use('/subtasks', routes.subtasks);
 app.use('/notes', routes.notes);
 
 io.use(function(socket, next){

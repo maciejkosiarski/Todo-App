@@ -5,7 +5,7 @@ var Task = require('../models/task');
 
 /* GET tasks listing. */
 router.get('/', function(req, res) {
-    Task.find({completed:false, _user:req.user._id}).sort({created: -1}).populate({ path: 'notes', select: 'desc _id'}).exec(function (err, tasks) {
+    Task.find({completed:false, _user:req.user._id}).sort({created: -1}).populate('subtasks notes').exec(function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
             res.redirect('/');
@@ -53,7 +53,7 @@ router.post('/', function (req, res) {
     res.redirect('/tasks');
 });
 
-router.put('/complete', function (req, res) {
+router.put('/complete', uuidValid, function (req, res) {
     Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: true}}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not complted.</div>');
@@ -61,7 +61,7 @@ router.put('/complete', function (req, res) {
             req.flash('info', '<div class="alert alert-success">Task was successful completed.</div>');
         }
         res.redirect('/tasks');
-    });
+    });    
 });
 
 router.put('/complete/all', function (req, res) {
@@ -75,7 +75,7 @@ router.put('/complete/all', function (req, res) {
     });
 });
 
-router.put('/active', function (req, res) {
+router.put('/active', uuidValid, function (req, res) {
     Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: false}}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not activated.</div>');
@@ -97,7 +97,7 @@ router.put('/active/all', function (req, res) {
     });
 });
 
-router.put('/edit', function (req, res) {
+router.put('/edit', uuidValid, function (req, res) {
     Task.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not modified.</div>');
@@ -108,7 +108,7 @@ router.put('/edit', function (req, res) {
     });
 });
 
-router.delete('/', function (req, res) {
+router.delete('/', uuidValid, function (req, res) {
     Task.findOne({_id: req.body._id}, function (err, task) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not removed.</div>');
@@ -117,7 +117,7 @@ router.delete('/', function (req, res) {
             req.flash('info', '<div class="alert alert-success">Task was successful removed.</div>');
         }
         res.redirect('/tasks/completed');
-    });
+    });  
 });
 
 router.delete('/all', function (req, res) {
@@ -135,3 +135,14 @@ router.delete('/all', function (req, res) {
 });
 
 module.exports = router;
+
+function uuidValid(req, res, next){
+    req.checkBody('_id', 'Invalid uuid').notEmpty().isUUID(4);
+    var errors = req.validationErrors();
+    if(errors) {
+        req.flash('info', '<div class="alert alert-danger">Error. UUID is not valid.</div>');
+        res.redirect('/tasks');
+    } else {
+        return next();
+    }
+}

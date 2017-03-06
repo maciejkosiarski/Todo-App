@@ -7,7 +7,6 @@ var Task = require('../models/task');
 /* GET notes listing. */
 router.get('/', function(req, res) {
     Note.find({ _task:false, _user:req.user._id }).sort({created: -1}).exec(function (err, notes) {
-        console.log(notes);
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Notes was not find.</div>');
             res.redirect('/');
@@ -24,28 +23,33 @@ router.get('/', function(req, res) {
 router.post('/', function (req, res) {
     //create note to specific task
     if(req.body._id){
-        Task.findById(req.body._id, function (err, task) {
-            if(err || req.body.desc === ''){
-                req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
-            } else {
-                var newNote = new Note({
-                    name : task.name,
-                    desc : req.body.desc,
-                    _task : task._id
-                });
-                newNote.save(function (err, note) {
-                    if (err) {
-                        req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
-                    } else {
-                        task.notes.push(note._id);
-                        task.save();
-                        req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
-                    }
-
-                });
-            }
-            res.redirect('/tasks');
-        });
+        req.checkBody('_id', 'Invalid uuid').notEmpty().isUUID(4);
+        var errors = req.validationErrors();
+        if(errors) {
+            req.flash('info', '<div class="alert alert-danger">Error. UUID is not valid.</div>');
+        } else {
+            Task.findById(req.body._id, function (err, task) {
+                if(err || req.body.desc === ''){
+                    req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
+                } else {
+                    var newNote = new Note({
+                        name : task.name,
+                        desc : req.body.desc,
+                        _task : task._id
+                    });
+                    newNote.save(function (err, note) {
+                        if (err) {
+                            req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
+                        } else {
+                            task.notes.push(note._id);
+                            task.save();
+                            req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
+                        }
+                    });
+                }   
+            });
+        }
+        res.redirect('/tasks');
     //create single independent note
     } else {
         if(req.body.name === '' || req.body.desc === ''){
@@ -69,7 +73,7 @@ router.post('/', function (req, res) {
     }
 });
 
-router.put('/', function (req, res) {
+router.put('/', uuidValid, function (req, res) {
     Note.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Note was not modified.</div>');
@@ -80,7 +84,7 @@ router.put('/', function (req, res) {
     });
 });
 
-router.delete('/', function (req, res) {
+router.delete('/', uuidValid, function (req, res) {
     Note.findOneAndRemove({_id: req.body._id}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Note was not removed.</div>');
@@ -92,3 +96,14 @@ router.delete('/', function (req, res) {
 });
 
 module.exports = router;
+
+function uuidValid(req, res, next){
+    req.checkBody('_id', 'Invalid uuid').notEmpty().isUUID(4);
+    var errors = req.validationErrors();
+    if(errors) {
+        req.flash('info', '<div class="alert alert-danger">Error. UUID is not valid.</div>');
+        res.redirect('/notes');
+    } else {
+        return next();
+    }
+}

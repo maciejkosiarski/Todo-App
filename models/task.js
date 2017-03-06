@@ -2,12 +2,14 @@ var mongoose = require('mongoose');
 var uuid = require('node-uuid');
 
 var Note = require('./note');
+var Subtask = require('./subtask');
 
 var taskSchema = mongoose.Schema({
     _id: {type: String, default: uuid.v4},
     _user : {type: String, ref: 'User'},
     name: {type: String, default: ""},
     desc: {type: String, default: ""},
+    subtasks: [{ type:  String, ref: 'Subtask' }],
     notes: [{ type:  String, ref: 'Note' }],
     completed: {type: Boolean, default: false},
     created: {type: Date, default: Date.now},
@@ -28,6 +30,7 @@ taskSchema.pre('update', function (next) {
 
 taskSchema.pre('remove', function (next) {
     Note.remove({_task: this._id }).exec();
+    Subtask.remove({_task: this._id }).exec();
     next();
 });
 
