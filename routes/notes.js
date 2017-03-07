@@ -19,58 +19,52 @@ router.get('/', function(req, res) {
     });
 });
 
-/* POST new note. */
+/* POST new single independent note */
 router.post('/', function (req, res) {
-    //create note to specific task
-    if(req.body._id){
-        req.checkBody('_id', 'Invalid uuid').notEmpty().isUUID(4);
-        var errors = req.validationErrors();
-        if(errors) {
-            req.flash('info', '<div class="alert alert-danger">Error. UUID is not valid.</div>');
-        } else {
-            Task.findById(req.body._id, function (err, task) {
-                if(err || req.body.desc === ''){
-                    req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
-                } else {
-                    var newNote = new Note({
-                        name : task.name,
-                        desc : req.body.desc,
-                        _task : task._id
-                    });
-                    newNote.save(function (err, note) {
-                        if (err) {
-                            req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
-                        } else {
-                            task.notes.push(note._id);
-                            task.save();
-                            req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
-                        }
-                    });
-                }   
-            });
-        }
-        res.redirect('/tasks');
-    //create single independent note
+    if(req.body.name === '' || req.body.desc === ''){
+        req.flash('info', '<div class="alert alert-danger">Error. Note was not created. Invalid data.</div>');
+        res.redirect('/notes');
     } else {
-        if(req.body.name === '' || req.body.desc === ''){
-            req.flash('info', '<div class="alert alert-danger">Error. Note was not created. Invalid data.</div>');
+        var newNote = new Note({
+            name : req.body.name,
+            desc : req.body.desc,
+            _user : req.user._id
+        });
+        newNote.save(function (err, note) {
+            if (err) {
+                req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
+            } else {
+                req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
+            }
+            res.redirect('/notes');
+        });
+    }
+});
+
+/* POST new note to specific task */
+router.post('/toTask', uuidValid, function (req, res) {
+    Task.findById(req.body._id, function (err, task) {
+        if(err || req.body.desc === ''){
+            req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
+            res.redirect('/tasks');
         } else {
             var newNote = new Note({
-                name : req.body.name,
+                name : task.name,
                 desc : req.body.desc,
-                _user : req.user._id
+                _task : task._id
             });
             newNote.save(function (err, note) {
                 if (err) {
                     req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
                 } else {
+                    task.notes.push(note._id);
+                    task.save();
                     req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
                 }
-
+                res.redirect('/tasks');
             });
         }
-        res.redirect('/notes');
-    }
+    });
 });
 
 router.put('/', uuidValid, function (req, res) {
