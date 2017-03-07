@@ -8,7 +8,7 @@
                 <h4 class="modal-title">Add note</h4>
             </div>           
             <div class="modal-body">
-                <form id="subtaskForm" method="POST" action="/subtasks" >
+                <form class="subtaskForm" method="POST" action="/subtasks" >
                     <input type="hidden" name="_id" value="<%= task._id %>">
                     <input type="hidden" name="_csrf" value="<%= _csrf %>">
                     <div class="row">

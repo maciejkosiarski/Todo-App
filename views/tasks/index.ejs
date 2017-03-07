@@ -113,12 +113,12 @@
     </div>
     <script>
         $(document).ready(function(){
-            $('#subtaskForm').submit(function(e){
+            $('.subtaskForm').submit(function(e){
                 e.preventDefault();
                 var data = {};
-                data.name = $('#subtaskForm input[name=name]').val();
-                data._id = $('#subtaskForm input[name=_id]').val();
-                data._csrf = $('#subtaskForm input[name=_csrf]').val();
+                data.name = $(this).find('input[name=name]').val();
+                data._id = $(this).find('input[name=_id]').val();
+                data._csrf = $(this).find('input[name=_csrf]').val();
                 $.ajax({
                     type: 'POST',
                     data: JSON.stringify(data),
