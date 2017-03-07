@@ -27,7 +27,9 @@ router.post('/', uuidValid, function (req, res) {
 
         if(err || req.body.name === ''){
            var info = '<div class="alert alert-danger">Error. Subtask was not created.</div>';
-           res.send(info);
+           var data = {};
+           data.info = info;
+           res.send(data);
         } else {
             var newSubtask = new Subtask({
                 name : req.body.name,
