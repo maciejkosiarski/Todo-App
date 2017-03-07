@@ -41,7 +41,7 @@ router.post('/', function (req, res) {
     res.redirect('/users');
 });
 
-router.put('/', function (req, res) {
+router.put('/', uuidValid, function (req, res) {
     User.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Your data was not modified.</div>');
@@ -52,7 +52,7 @@ router.put('/', function (req, res) {
     });
 });
 
-router.delete('/', function (req, res) {
+router.delete('/', uuidValid, function (req, res) {
     User.findOne({_id: req.body._id}, function (err, user) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. User was not removed.</div>');
@@ -65,3 +65,14 @@ router.delete('/', function (req, res) {
 });
 
 module.exports = router;
+
+function uuidValid(req, res, next){
+    req.checkBody('_id', 'Invalid uuid').notEmpty().isUUID(4);
+    var errors = req.validationErrors();
+    if(errors) {
+        req.flash('info', '<div class="alert alert-danger">Error. UUID is not valid.</div>');
+        res.redirect('/users');
+    } else {
+        return next();
+    }
+}

@@ -5,7 +5,7 @@ var Task = require('../models/task');
 
 /* GET tasks listing. */
 router.get('/', function(req, res) {
-    Task.find({completed:false, _user:req.user._id}).sort({created: -1}).populate({ path: 'notes', select: 'desc _id'}).exec(function (err, tasks) {
+    Task.find({completed:false, _user:req.user._id}).sort({created: -1}).populate('subtasks notes').exec(function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
             res.redirect('/');
@@ -37,6 +37,7 @@ router.get('/completed', function(req, res) {
 router.post('/', function (req, res) {
     if(req.body.name === '') {
         req.flash('info', '<div class="alert alert-danger">Invalid data.</div>');
+        res.redirect('/tasks');
     } else {
         var newTask = new Task({
             name : req.body.name,
@@ -48,12 +49,12 @@ router.post('/', function (req, res) {
             } else {
                 req.flash('info', '<div class="alert alert-success">Task was successful created.</div>');
             }
+            res.redirect('/tasks');
         });
     }
-    res.redirect('/tasks');
 });
 
-router.put('/complete', function (req, res) {
+router.put('/complete', uuidValid, function (req, res) {
     Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: true}}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not complted.</div>');
@@ -61,11 +62,11 @@ router.put('/complete', function (req, res) {
             req.flash('info', '<div class="alert alert-success">Task was successful completed.</div>');
         }
         res.redirect('/tasks');
-    });
+    });    
 });
 
 router.put('/complete/all', function (req, res) {
-    Task.update({completed: false},{$set:{completed: true}}, {multi: true}, function (err) {
+    Task.update({completed: false, _user:req.session.passport.user._id},{$set:{completed: true}}, {multi: true}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not complted.</div>');
         } else {
@@ -75,7 +76,7 @@ router.put('/complete/all', function (req, res) {
     });
 });
 
-router.put('/active', function (req, res) {
+router.put('/active', uuidValid, function (req, res) {
     Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: false}}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not activated.</div>');
@@ -87,7 +88,7 @@ router.put('/active', function (req, res) {
 });
 
 router.put('/active/all', function (req, res) {
-    Task.update({completed: true},{$set:{completed: false}}, {multi: true}, function (err) {
+    Task.update({completed: true, _user:req.session.passport.user._id},{$set:{completed: false}}, {multi: true}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not activated.</div>');
         } else {
@@ -97,7 +98,7 @@ router.put('/active/all', function (req, res) {
     });
 });
 
-router.put('/edit', function (req, res) {
+router.put('/edit', uuidValid, function (req, res) {
     Task.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not modified.</div>');
@@ -108,7 +109,7 @@ router.put('/edit', function (req, res) {
     });
 });
 
-router.delete('/', function (req, res) {
+router.delete('/', uuidValid, function (req, res) {
     Task.findOne({_id: req.body._id}, function (err, task) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not removed.</div>');
@@ -117,11 +118,11 @@ router.delete('/', function (req, res) {
             req.flash('info', '<div class="alert alert-success">Task was successful removed.</div>');
         }
         res.redirect('/tasks/completed');
-    });
+    });  
 });
 
 router.delete('/all', function (req, res) {
-    Task.find({ completed: true }, function (err, tasks) {
+    Task.find({ completed: true, _user:req.session.passport.user._id }, function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not removed.</div>');
         } else {
@@ -135,3 +136,14 @@ router.delete('/all', function (req, res) {
 });
 
 module.exports = router;
+
+function uuidValid(req, res, next){
+    req.checkBody('_id', 'Invalid uuid').notEmpty().isUUID(4);
+    var errors = req.validationErrors();
+    if(errors) {
+        req.flash('info', '<div class="alert alert-danger">Error. UUID is not valid.</div>');
+        res.redirect('/tasks');
+    } else {
+        return next();
+    }
+}
