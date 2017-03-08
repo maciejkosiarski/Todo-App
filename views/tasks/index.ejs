@@ -26,94 +26,93 @@
                 </div>
             </div>
         </div>
-        <% var i = 1; %>
-        <% tasks.forEach(function(task){ %>
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <ul class="nav nav-pills">
-                        <li role="presentation">
-                           <form method="POST" action="/tasks/complete" >
-                                <input type="hidden" name="_method" value="put">
-                                <input type="hidden" name="_id" value="<%= task._id %>">
-                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                <button type="submit" class="btn btn-default">Complete</button>
-                            </form> 
-                        </li>
-                        <li role="presentation">
-                            <a data-toggle="collapse"  href="#collapse<%= i %>"><b><%= task.name %></b></a>
-                        </li>
-                        <li role="presentation">
-                            <a href="#" role="button" data-toggle="modal" data-target="#editModal<%= task._id %>">Edit</a>
-                            <% include ../partials/modals/edit_task %>
-                        </li>
-                        <li role="presentation">
-                            <a href="#" role="button" data-toggle="modal" data-target="#addNoteModal<%= task._id %>">Add</a>
-                            <% include ../partials/modals/add %>
-                        </li>
-                        <li role="presentation">
-                            <a><%= moment(new Date(task.created)).format('YYYY-MM-DD HH:mm') %></a>
-                        </li>
-                    </ul>
-                </div>
-                <div id="collapse<%= i %>" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <p><b>Description:</b><%= task.desc %></p>
-                        <b>Subtasks:</b>
-                        <ul id="<%= task._id %>">
-                            <% task.subtasks.forEach(function(subtask){ %>
-                                <li>
-                                    <span <% if(subtask.completed){%>style="text-decoration: line-through"<% } %>><%= subtask.name %></span>
-                                    <% if(subtask.completed){%>
-                                        <form style="display:inline" method="POST" action="/subtasks/active" >
-                                            <input type="hidden" name="_method" value="put">
-                                            <input type="hidden" name="_id" value="<%= subtask._id %>">
-                                            <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                            <button type="submit" class="btn btn-default">Active</button>
-                                        </form>
-                                    <% } else { %>
-                                        <form style="display:inline" method="POST" action="/subtasks/complete" >
-                                            <input type="hidden" name="_method" value="put">
-                                            <input type="hidden" name="_id" value="<%= subtask._id %>">
-                                            <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                            <button type="submit" class="btn btn-default">Complete</button>
-                                        </form>
-                                    <% } %>
-                                    <form style="display:inline" method="POST" action="/subtasks" >
-                                        <input type="hidden" name="_method" value="delete">
-                                        <input type="hidden" name="_id" value="<%= subtask._id %>">
+        <% if(tasks){ %>
+            <% var i = 1; %>
+            <% tasks.forEach(function(task){ %>
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <ul class="nav nav-pills">
+                                <li role="presentation">
+                                   <form method="POST" action="/tasks/complete" >
+                                        <input type="hidden" name="_method" value="put">
+                                        <input type="hidden" name="_id" value="<%= task._id %>">
                                         <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                        <button type="submit" class="btn btn-default">Remove</button>
-                                    </form>
+                                        <button type="submit" class="btn btn-default">Complete</button>
+                                    </form> 
                                 </li>
-                            <% }); %>
-                        </ul>
-                        
-                    </div>
-                    <div class="panel-footer">
-                        <b>Notes:</b>
-                        <% task.notes.forEach(function(note){ %>
-                            <li>
-                                <%= note.desc %>
-                                <form style="display:inline" method="POST" action="/notes" >
-                                    <input type="hidden" name="_method" value="delete">
-                                    <input type="hidden" name="_id" value="<%= note._id %>">
-                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                    <button type="submit" class="btn btn-default">Remove</button>
-                                </form>
-                            </li>    
-                        <% }); %>
+                                <li role="presentation">
+                                    <a data-toggle="collapse"  href="#collapse<%= i %>"><b><%= task.name %></b></a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#editModal<%= task._id %>">Edit</a>
+                                    <% include ../partials/modals/edit_task %>
+                                </li>
+                                <li role="presentation">
+                                    <a href="#" role="button" data-toggle="modal" data-target="#addNoteModal<%= task._id %>">Add</a>
+                                    <% include ../partials/modals/add %>
+                                </li>
+                                <li role="presentation">
+                                    <a><%= moment(new Date(task.created)).format('YYYY-MM-DD HH:mm') %></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="collapse<%= i %>" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <p><b>Description:</b><%= task.desc %></p>
+                                <b>Subtasks:</b>
+                                <ul id="<%= task._id %>">
+                                    <% task.subtasks.forEach(function(subtask){ %>
+                                        <li id="<%= subtask._id %>">
+                                            <span <% if(subtask.completed){%>style="text-decoration: line-through"<% } %>><%= subtask.name %></span>
+                                            <% if(subtask.completed){%>
+                                            <form class="active-subtask-form" style="display:inline" >
+                                                    <input type="hidden" name="_id" value="<%= subtask._id %>">
+                                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                                    <button type="submit" class="btn btn-default">Active</button>
+                                                </form>
+                                            <% } else { %>
+                                                <form class="complete-subtask-form" style="display:inline" >
+                                                    <input type="hidden" name="_id" value="<%= subtask._id %>">
+                                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                                    <button type="submit" class="btn btn-default">Complete</button>
+                                                </form>
+                                            <% } %>
+                                            <form style="display:inline" method="POST" action="/subtasks" >
+                                                <input type="hidden" name="_method" value="delete">
+                                                <input type="hidden" name="_id" value="<%= subtask._id %>">
+                                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                                <button type="submit" class="btn btn-default">Remove</button>
+                                            </form>
+                                        </li>
+                                    <% }); %>
+                                </ul>
+
+                            </div>
+                            <div class="panel-footer">
+                                <b>Notes:</b>
+                                <% task.notes.forEach(function(note){ %>
+                                    <li>
+                                        <%= note.desc %>
+                                        <form style="display:inline" method="POST" action="/notes" >
+                                            <input type="hidden" name="_method" value="delete">
+                                            <input type="hidden" name="_id" value="<%= note._id %>">
+                                            <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                            <button type="submit" class="btn btn-default">Remove</button>
+                                        </form>
+                                    </li>    
+                                <% }); %>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <% i++; %>
-        <% }); %>
-        
+                <% i++; %>
+            <% }); %>
+        <% }; %>
     </div>
     <script>
         $(document).ready(function(){
-            $('.subtaskForm').submit(function(e){
+            $('.create-subtask-form').submit(function(e){
                 e.preventDefault();
                 var data = {};
                 data.name = $(this).find('input[name=name]').val();
@@ -125,12 +124,53 @@
                     contentType: 'application/json',
                     url: '/subtasks',						
                     success: function(res) {
-                        console.log(res.subtask);
-                        $('#info').append(res.info);
-                        var html = '<li><span>'+res.subtask.name+'</span> ';
-                        html += '<form style="display:inline" method="POST" action="/subtasks/complete" ><input type="hidden" name="_method" value="put"><input type="hidden" name="_id" value="'+res.subtask._task+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Complete</button></form> ';
-                        html += '<form style="display:inline" method="POST" action="/subtasks" ><input type="hidden" name="_method" value="delete"><input type="hidden" name="_id" value="'+res.subtask._task+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Remove</button></form></li>';
-                        $('#'+res.subtask._task).append(html);
+                        $('#info').html(res.info);
+                        if(res.subtask){
+                            var html = '<li id="'+res.subtask._id+'"><span>'+res.subtask.name+'</span> ';
+                            html += '<form class="complete-subtask-form" style="display:inline" ><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Complete</button></form> ';
+                            html += '<form style="display:inline" method="POST" action="/subtasks" ><input type="hidden" name="_method" value="delete"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Remove</button></form></li>';
+                            $('#'+res.subtask._task).append(html);
+                        }
+                    }
+                });
+            });
+            
+            $('body').on('submit', 'form.complete-subtask-form', function(e){
+                e.preventDefault();
+                var data = {};
+                data._id = $(this).find('input[name=_id]').val();
+                data._csrf = $(this).find('input[name=_csrf]').val();
+                $.ajax({
+                    type: 'PUT',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    url: '/subtasks/complete',						
+                    success: function(res) {
+                        $('#info').html(res.info);
+                        var html = '<span style="text-decoration: line-through">'+res.subtask.name+'</span> ';
+                        html += '<form class="active-subtask-form" style="display:inline"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Active</button></form> ';
+                        html += '<form style="display:inline" method="POST" action="/subtasks" ><input type="hidden" name="_method" value="delete"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Remove</button></form>';
+                        $('#'+res.subtask._id).html(html);
+                    }
+                });
+            });
+            
+            $('body').on('submit', 'form.active-subtask-form', function(e){
+                e.preventDefault();
+                var data = {};
+                data._id = $(this).find('input[name=_id]').val();
+                data._csrf = $(this).find('input[name=_csrf]').val();
+                $.ajax({
+                    type: 'PUT',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    url: '/subtasks/active',						
+                    success: function(res) {
+                        $('#info').html(res.info);
+                        var html = '<span>'+res.subtask.name+'</span> ';
+                        html += '<form class="complete-subtask-form" style="display:inline"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Complete</button></form> ';
+                        html += '<form style="display:inline" method="POST" action="/subtasks" ><input type="hidden" name="_method" value="delete"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Remove</button></form>';
+                        $('#'+res.subtask._id).html(html);
                     }
                 });
             });

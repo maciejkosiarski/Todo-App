@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
     User.find({}).sort({created: -1}).exec(function (err, users) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Users was not find.</div>');
-            res.redirect('/');
+            return res.redirect('/');
         }
         res.render('users/index', {
             page:'Users',
@@ -25,20 +25,21 @@ router.post('/', function (req, res) {
     var errors = req.validationErrors();
     if(errors) {
         req.flash('info', '<div class="alert alert-danger">Invalid data. Nick(alphanumeric) and pass(length more than 7 char) cant be empty.</div>');
+        return res.redirect('/users');
     } else {
         var newUser = new User({
             nick : req.body.nick
         });
         newUser.pass = newUser.generateHash(req.body.pass);
-        newUser.save(function (err, note) {
+        newUser.save(function (err) {
             if (err) {
                 req.flash('info', '<div class="alert alert-danger">Error: '+err.message+' User was not created.</div>');
             } else {
                 req.flash('info', '<div class="alert alert-success">User was successful created.</div>');
             }
+            res.redirect('/users');
         });
     }
-    res.redirect('/users');
 });
 
 router.put('/', uuidValid, function (req, res) {

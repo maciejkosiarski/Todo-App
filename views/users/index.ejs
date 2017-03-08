@@ -29,24 +29,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% var i = 1; %>
-                <% users.forEach(function(user){ %>
-                    <tr>
-                        <td><%= i %></td>
-                        <td><%= user.nick %></td>
-                        <td><%= user.pass %></td>
-                        <td><%= moment(new Date(user.created)).format('YYYY-MM-DD HH:mm') %></td>
-                        <td>
-                            <form method="POST" action="/users" >
-                                <input type="hidden" name="_method" value="delete">
-                                <input type="hidden" name="_id" value="<%= user._id %>">
-                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                <button type="submit" class="btn btn-default">Remove</button>
-                            </form>
-                        </td>
-                    </tr>
-                <% i++; %>
-                <% }); %>
+                    <% if(users){ %>
+                        <% var i = 1; %>
+                        <% users.forEach(function(user){ %>
+                            <tr>
+                                <td><%= i %></td>
+                                <td><%= user.nick %></td>
+                                <td><%= user.pass %></td>
+                                <td><%= moment(new Date(user.created)).format('YYYY-MM-DD HH:mm') %></td>
+                                <td>
+                                    <form method="POST" action="/users" >
+                                        <input type="hidden" name="_method" value="delete">
+                                        <input type="hidden" name="_id" value="<%= user._id %>">
+                                        <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                        <button type="submit" class="btn btn-default">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% i++; %>
+                        <% }); %>
+                    <% }; %>
                 </tbody>
             </table>
         </div>
