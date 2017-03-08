@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
     Note.find({ _task:false, _user:req.user._id }).sort({created: -1}).exec(function (err, notes) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Notes was not find.</div>');
-            res.redirect('/');
+            return res.redirect('/');
         }
         res.render('notes/index', {
             page: 'Notes',
@@ -23,7 +23,7 @@ router.get('/', function(req, res) {
 router.post('/', function (req, res) {
     if(req.body.name === '' || req.body.desc === ''){
         req.flash('info', '<div class="alert alert-danger">Error. Note was not created. Invalid data.</div>');
-        res.redirect('/notes');
+        return res.redirect('/notes');
     } else {
         var newNote = new Note({
             name : req.body.name,
@@ -46,7 +46,7 @@ router.post('/toTask', uuidValid, function (req, res) {
     Task.findById(req.body._id, function (err, task) {
         if(err || req.body.desc === ''){
             req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
-            res.redirect('/tasks');
+            return res.redirect('/tasks');
         } else {
             var newNote = new Note({
                 name : task.name,

@@ -8,7 +8,7 @@ router.get('/', function(req, res) {
     Task.find({completed:false, _user:req.user._id}).sort({created: -1}).populate('subtasks notes').exec(function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
-            res.redirect('/');
+            return res.redirect('/');
         }
         res.render('tasks/index', { 
             page: 'Tasks',
@@ -23,7 +23,7 @@ router.get('/completed', function(req, res) {
     Task.find({completed:true, _user:req.user._id}).sort({created: -1}).exec(function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
-            res.redirect('/');
+            return res.redirect('/');
         }
         res.render('tasks/completed', { 
             page: 'Completed',
@@ -37,7 +37,7 @@ router.get('/completed', function(req, res) {
 router.post('/', function (req, res) {
     if(req.body.name === '') {
         req.flash('info', '<div class="alert alert-danger">Invalid data.</div>');
-        res.redirect('/tasks');
+        return res.redirect('/tasks');
     } else {
         var newTask = new Task({
             name : req.body.name,

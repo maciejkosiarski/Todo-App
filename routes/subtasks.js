@@ -24,7 +24,6 @@ var Subtask = require('../models/subtask');
 router.post('/', uuidValid, function (req, res) {
     //create subtask to specific task
     Task.findById(req.body._id, function (err, task) {
-
         if(err || req.body.name === ''){
            var info = '<div class="alert alert-danger">Error. Subtask was not created.</div>';
            var data = {};
@@ -54,24 +53,32 @@ router.post('/', uuidValid, function (req, res) {
 });
 
 router.put('/complete', uuidValid, function (req, res) {
-    Subtask.findOneAndUpdate({_id: req.body._id},{$set:{completed: true}}, function (err) {
+    Subtask.findOneAndUpdate({_id: req.body._id},{$set:{completed: true}}, function (err, subtask) {
+        var info = '';
         if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Subtask was not complted.</div>');
+            info = '<div class="alert alert-danger">Error. Subtask was not complted.</div>';
         } else {
-            req.flash('info', '<div class="alert alert-success">Subtask was successful completed.</div>');
+            info = '<div class="alert alert-success">Subtask was successful completed.</div>';
         }
-        res.redirect('/tasks');
+        var data = {};
+        data.info = info;
+        data.subtask = subtask;
+        res.send(data);
     });
 });
 
 router.put('/active', uuidValid, function (req, res) {
-    Subtask.findOneAndUpdate({_id: req.body._id},{$set:{completed: false}}, function (err) {
+    Subtask.findOneAndUpdate({_id: req.body._id},{$set:{completed: false}}, function (err, subtask) {
+        var info = '';
         if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Subtask was not activated.</div>');
+            info = '<div class="alert alert-danger">Error. Subtask was not activated.</div>';
         } else {
-            req.flash('info', '<div class="alert alert-success">Subtask was successful activated.</div>');
+            info = '<div class="alert alert-success">Subtask was successful activated.</div>';
         }
-        res.redirect('/tasks');
+        var data = {};
+        data.info = info;
+        data.subtask = subtask;
+        res.send(data);
     });
 });
 
