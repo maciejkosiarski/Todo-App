@@ -9,14 +9,19 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    
     <script>
         $(document).ready(function(){
+            $('#chatModal').on('shown.bs.modal', function () {
+                $('#message').focus();
+            })  
             var socket = io();
             socket.on('messages', function(messages, err){
                 if(messages.length) {
                     for(var i = 0; i < messages.length; i++){
                         var html = '<div class="row message-bubble">';
-                        html += '<p class="text-muted">'+ messages[i]._user.nick +' '+ messages[i].created +'</p>';
+                        html += '<p class="text-muted">'+ messages[i]._user.nick +' '+ moment(messages[i].created).format('YYYY-MM-DD HH:mm') +'</p>';
                         html += '<span>'+ messages[i].content +'</span>';
                         html += '</div>';
                         $('#messages').append(html);
@@ -47,7 +52,7 @@
 
             socket.on('chat message', function(msg){
                 var html = '<div class="row message-bubble">';
-                    html += '<p class="text-muted">'+ msg.user +' '+ msg.created +'</p>';
+                    html += '<p class="text-muted">'+ msg.user +' '+ moment(msg.created).format('YYYY-MM-DD HH:mm') +'</p>';
                     html += '<span>'+ msg.content +'</span>';
                     html += '</div>';
                 $('#messages').append(html);      
@@ -59,7 +64,7 @@
             });
 
             socket.on('er', function(er){
-                $('#info').append('<div class="alert alert-danger">'+er+'</div>');
+                $('#info').html('<div class="alert alert-danger">'+er+'</div>');
             });
 
         });

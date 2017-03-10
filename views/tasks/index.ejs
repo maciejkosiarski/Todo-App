@@ -5,7 +5,7 @@
         <input type="hidden" name="_csrf" value="<%= _csrf %>">
         <div class="form-group">
             <label>Name</label>
-            <input type="text" class="form-control" name='name' value="">
+            <input type="text" class="form-control" name='name' value="" autofocus>
         </div>
         <button type="submit" class="btn btn-default">Add task</button>         
     </form>
@@ -87,9 +87,6 @@
                                         </li>
                                     <% }); %>
                                 </ul>
-
-                            </div>
-                            <div class="panel-footer">
                                 <b>Notes:</b>
                                 <% task.notes.forEach(function(note){ %>
                                     <li>

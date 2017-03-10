@@ -1,20 +1,29 @@
 <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">Welcome to <%= title %></a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a>Logged as <b><%= session.passport.user.nick %></b></a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="" data-toggle="modal" data-target="#chatModal">Chat</a></li>
+                    <% include ../partials/modals/chat %>
+                    <% if(session.passport.user.admin){ %>
+                        <li><a href="/users">Users</a></li>
+                    <% } %>
+                    <li><a href="/tasks">Todo list</a></li>
+                    <li><a href="/tasks/completed">Completed</a></li>
+                    <li><a href="/notes">Notes</a></li>
+                    <li><a href="/auth/out">Logout</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+     </nav>
     <div id="info">
         <% if (messages.length > 0) { %>
             <%- messages %>
         <% } %>
     </div>
-    <h1><%= page %></h1>
-    <p>Welcome to <%= title %></p>
-    <p>Logged as <%= session.passport.user.nick %></p>
-    <ul>
-        <li><button type="button" class="btn btn-info" data-toggle="modal" data-target="#chatModal">Chat</button></li>
-        <% include ../partials/modals/chat %>
-        <% if(session.passport.user.admin){ %>
-            <li><a href="/users">Users</a></li>
-        <% } %>
-        <li><a href="/tasks">Todo list</a></li>
-        <li><a href="/tasks/completed">Completed</a></li>
-        <li><a href="/notes">Notes</a></li>
-        <li><a href="/auth/out">Logout</a></li>
-    </ul>

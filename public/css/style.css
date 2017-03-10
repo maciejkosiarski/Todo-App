@@ -1,30 +1,72 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-color: #2B2B2B!important;
+    padding: 50px;
+    font-family: monospace!important;
+    color: #bfbfbf!important;
+    font-size: 13px;
 }
 
-a {
-  color: #00B7FF;
+.navbar-default{
+    background-color: #2B2B2B!important;
+    border-color: #2B2B2B!important;
 }
 
-body {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  background-color: #eee;
+.navbar-default .navbar-nav>li>a{
+    color: #bfbfbf!important;
+    #dcdcdc
 }
 
-footer {
-  position: absolute;
-  width: 90%;
-  /* Set the fixed height of the footer here */
-  height: 60px;
+.navbar-default .navbar-nav>li>a:hover{
+    color: #dcdcdc!important;
+}
+
+.nav>li>a{
+    color: #bfbfbf!important;
+}
+
+.nav>li>a:focus, 
+.nav>li>a:hover{
+    background-color: #2B2B2B!important;
+}
+
+.modal-content{
+    background-color: #2B2B2B!important;
+    border: none!important;
+    border-radius: 0px!important;
+}
+
+.modal-header{
+    border-bottom: none!important;
+}
+
+.modal-footer{
+    border-top: none!important;
+}
+
+.modal-open .modal,.btn:focus{
+    outline:none!important
+}
+
+.close{
+    color: #3998d6!important;
+    text-shadow: none!important;
+    opacity: 1!important;
 }
 
 .form-signin {
   max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
 }
+
+.form-signin > label{
+    display: inline;
+    width: 70%;
+}
+
+.form-signin > input{
+    display: inline;
+    width: 70%;
+}
+
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
   margin-bottom: 10px;
@@ -32,15 +74,42 @@ footer {
 .form-signin .checkbox {
   font-weight: normal;
 }
-.form-signin .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
+
+.form-group > label{
+    display: inline;
+    width: 70%;
 }
+
+.form-group > input{
+    display: inline;
+    width: 70%;
+}
+
+input{
+    background-color: #2B2B2B!important;
+    border-color: #2B2B2B!important;
+    webkit-box-shadow:none!important;
+    box-shadow:none!important;
+    webkit-transition:none!important;
+    transition:none!important;
+}
+
+input,
+textarea {
+    color: #3998d6!important;
+    text-shadow: none;
+    -webkit-text-fill-color: initial;
+}
+
+.form-control {
+    
+}
+
+.form-control:focus{
+    border-color: #2B2B2B!important;
+}
+
+
 .form-signin .form-control:focus {
   z-index: 2;
 }
@@ -55,4 +124,83 @@ footer {
   border-top-right-radius: 0;
 }
 
+.panel-group{
+    margin-bottom: 0px!important;
+    border: 2px solid #424242;
+}
 
+.panel-group .panel{
+    background-color: #2B2B2B!important;
+    border: 1px solid white;
+    box-shadow:none!important;
+}
+
+.panel-default{
+    border-color: #2B2B2B!important;
+}
+
+.panel-default>.panel-heading {
+    background-color: #2B2B2B!important;
+    border-color: #2B2B2B!important;
+    color: #bfbfbf!important;
+}
+
+.panel-default>.panel-heading+.panel-collapse>.panel-body {
+    border: none!important;
+}
+
+.panel-group .panel-heading+.panel-collapse>.list-group, .panel-group .panel-heading+.panel-collapse>.panel-body {
+    border: none!important;
+}
+
+button:focus {
+    outline:none!important;
+}
+
+.btn{
+    border-radius: 0px!important;
+}
+
+.btn:hover{
+    color: #296c99!important;
+}
+
+.btn:active{
+    box-shadow: none!important;
+    webkit-box-shadow: none!important;
+}
+
+.btn-default{
+    background-color: #2B2B2B!important;
+    border-color: #2B2B2B!important;
+    color: #3998d6!important;
+}
+
+.alert-success{
+    color: #00ff04!important;
+    background-color: #2B2B2B!important;
+    border-color: #2B2B2B!important;
+}
+
+.alert-danger{
+    color: #ff000c!important;
+    background-color: #2B2B2B!important;
+    border-color: #2B2B2B!important;
+}
+
+#users{
+    list-style: none;
+}
+
+#users > li:before{
+    content: "• ";
+    color: #00ff04;
+}
+
+footer {
+    color: #3998d6;
+    position: absolute;
+    width: 90%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+}
