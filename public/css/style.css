@@ -47,6 +47,11 @@ body {
     outline:none!important
 }
 
+.modal-form > input,
+.modal-form > textarea {
+    width: 100%!important;
+}
+
 .close{
     color: #3998d6!important;
     text-shadow: none!important;
@@ -75,23 +80,48 @@ body {
   font-weight: normal;
 }
 
+.task-form{
+    margin-bottom: 0px!important;
+}
+
+.chat-form{
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #3998d6;
+}
+
+.message-row{
+    border-top: 2px solid #323232!important;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .form-group > label{
     display: inline;
-    width: 70%;
 }
 
 .form-group > input{
     display: inline;
-    width: 70%;
 }
 
 input{
-    background-color: #2B2B2B!important;
+    background-color: #323232!important;
     border-color: #2B2B2B!important;
     webkit-box-shadow:none!important;
     box-shadow:none!important;
     webkit-transition:none!important;
     transition:none!important;
+    border-radius: 0px!important;
+}
+
+textarea{
+    background-color: #323232!important;
+    border-color: #2B2B2B!important;
+    webkit-box-shadow:none!important;
+    box-shadow:none!important;
+    webkit-transition:none!important;
+    transition:none!important;
+    border-radius: 0px!important;
 }
 
 input,
@@ -102,7 +132,7 @@ textarea {
 }
 
 .form-control {
-    
+    width: inherit!important;
 }
 
 .form-control:focus{
@@ -122,6 +152,10 @@ textarea {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+
+.create-form{
+    padding-left: 15px;
 }
 
 .panel-group{

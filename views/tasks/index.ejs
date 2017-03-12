@@ -1,15 +1,5 @@
 <% include ../partials/head %>
 <% include ../partials/header %>
-  
-    <form class="form-group" method="POST" action="/tasks" >
-        <input type="hidden" name="_csrf" value="<%= _csrf %>">
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" class="form-control" name='name' value="" autofocus>
-        </div>
-        <button type="submit" class="btn btn-default">Add task</button>         
-    </form>
-
     <div class="row">
         <div class="panel-group">
             <div class="panel panel-default">
@@ -21,6 +11,16 @@
                                  <input type="hidden" name="_csrf" value="<%= _csrf %>">
                                  <button type="submit" class="btn btn-default">Complete all</button>
                              </form>
+                        </li>
+                        <li role="presentation">
+                            <form method="POST" action="/tasks" >
+                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                <div class="form-group task-form">
+                                    <label>New task:</label>
+                                    <input type="text" class="form-control" name='name' value="" autofocus>
+                                    <button type="submit" class="btn btn-default">Add task</button>
+                                </div>                 
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -44,13 +44,9 @@
                                 <li role="presentation">
                                     <a data-toggle="collapse"  href="#collapse<%= i %>"><b><%= task.name %></b></a>
                                 </li>
-                                <li role="presentation">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#editModal<%= task._id %>">Edit</a>
-                                    <% include ../partials/modals/edit_task %>
-                                </li>
-                                <li role="presentation">
-                                    <a href="#" role="button" data-toggle="modal" data-target="#addNoteModal<%= task._id %>">Add</a>
-                                    <% include ../partials/modals/add %>
+                                <li>
+                                    <button class="btn btn-default" data-toggle="modal" data-target="#editModal<%= task._id %>">Edit task</button>
+                                <% include ../partials/modals/edit_task %>
                                 </li>
                                 <li role="presentation">
                                     <a><%= moment(new Date(task.created)).format('YYYY-MM-DD HH:mm') %></a>
@@ -59,6 +55,28 @@
                         </div>
                         <div id="collapse<%= i %>" class="panel-collapse collapse">
                             <div class="panel-body">
+                                <form class="create-form" >
+                                    <input type="hidden" name="_id" value="<%= task._id %>">
+                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label>New subtask:</label>
+                                            <input type="text" class="form-control inputs" name='name' >
+                                            <button type="submit" class="btn btn-default">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <form class="create-form" method="POST" action="/notes/toTask" >
+                                    <input type="hidden" name="_id" value="<%= task._id %>">
+                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label>New note:</label>
+                                            <input type="text" class="form-control inputs" name='desc' >
+                                            <button type="submit" class="btn btn-default">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
                                 <p><b>Description:</b><%= task.desc %></p>
                                 <b>Subtasks:</b>
                                 <ul id="<%= task._id %>">
