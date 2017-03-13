@@ -38,7 +38,7 @@
                                         <input type="hidden" name="_method" value="put">
                                         <input type="hidden" name="_id" value="<%= task._id %>">
                                         <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                        <button type="submit" class="btn btn-default">Complete</button>
+                                        <button type="submit" class="btn btn-default"><i class="fa fa-check-square-o" aria-hidden="true"></i>Complete</button>
                                     </form> 
                                 </li>
                                 <li role="presentation">
@@ -55,7 +55,7 @@
                         </div>
                         <div id="collapse<%= i %>" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <form class="create-form" >
+                                <form class="create-form new-subtask" >
                                     <input type="hidden" name="_id" value="<%= task._id %>">
                                     <input type="hidden" name="_csrf" value="<%= _csrf %>">
                                     <div class="row">
@@ -84,24 +84,24 @@
                                         <li id="<%= subtask._id %>">
                                             <span <% if(subtask.completed){%>style="text-decoration: line-through"<% } %>><%= subtask.name %></span>
                                             <% if(subtask.completed){%>
-                                            <form class="active-subtask-form" style="display:inline" >
+                                                <form class="active-subtask-form" style="display:inline" >
                                                     <input type="hidden" name="_id" value="<%= subtask._id %>">
                                                     <input type="hidden" name="_csrf" value="<%= _csrf %>">
                                                     <button type="submit" class="btn btn-default">Active</button>
+                                                </form>
+                                                    <form style="display:inline" method="POST" action="/subtasks" >
+                                                    <input type="hidden" name="_method" value="delete">
+                                                    <input type="hidden" name="_id" value="<%= subtask._id %>">
+                                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                                                    <button type="submit" class="btn btn-default">Remove</button>
                                                 </form>
                                             <% } else { %>
                                                 <form class="complete-subtask-form" style="display:inline" >
                                                     <input type="hidden" name="_id" value="<%= subtask._id %>">
                                                     <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                                    <button type="submit" class="btn btn-default">Complete</button>
+                                                    <button type="submit" class="btn btn-default"><i class="fa fa-check-square-o" aria-hidden="true"></i>Complete</button>
                                                 </form>
                                             <% } %>
-                                            <form style="display:inline" method="POST" action="/subtasks" >
-                                                <input type="hidden" name="_method" value="delete">
-                                                <input type="hidden" name="_id" value="<%= subtask._id %>">
-                                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                                <button type="submit" class="btn btn-default">Remove</button>
-                                            </form>
                                         </li>
                                     <% }); %>
                                 </ul>
@@ -126,8 +126,10 @@
         <% }; %>
     </div>
     <script>
+        document.getElementById("tasks-page").className = 'active-page';
+        
         $(document).ready(function(){
-            $('.create-subtask-form').submit(function(e){
+            $('.new-subtask').submit(function(e){
                 e.preventDefault();
                 var data = {};
                 data.name = $(this).find('input[name=name]').val();
@@ -183,8 +185,7 @@
                     success: function(res) {
                         $('#info').html(res.info);
                         var html = '<span>'+res.subtask.name+'</span> ';
-                        html += '<form class="complete-subtask-form" style="display:inline"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Complete</button></form> ';
-                        html += '<form style="display:inline" method="POST" action="/subtasks" ><input type="hidden" name="_method" value="delete"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Remove</button></form>';
+                        html += '<form class="complete-subtask-form" style="display:inline"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default"><i class="fa fa-check-square-o" aria-hidden="true">Complete</button></form> ';
                         $('#'+res.subtask._id).html(html);
                     }
                 });

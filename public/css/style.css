@@ -29,6 +29,16 @@ body {
     background-color: #2B2B2B!important;
 }
 
+.navbar-right>li:hover{
+    border-bottom: 2px solid;
+    border-radius: 0px!important;
+}
+
+.active-page{
+    border-bottom: 2px solid;
+    border-radius: 0px!important;
+}
+
 .modal-content{
     background-color: #2B2B2B!important;
     border: none!important;
@@ -58,19 +68,22 @@ body {
     opacity: 1!important;
 }
 
-.form-signin {
-  max-width: 330px;
+.form-signin > div > .form-control{
+    display: inline!important;
+    background-color: #2B2B2B!important;
 }
 
 .form-signin > label{
     display: inline;
-    width: 70%;
 }
 
 .form-signin > input{
     display: inline;
-    width: 70%;
+    width: 70%!important;
+    background-color: #2B2B2B!important;
 }
+
+.form-signin > .form-control{}
 
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
@@ -229,6 +242,14 @@ button:focus {
 #users > li:before{
     content: "• ";
     color: #00ff04;
+}
+
+.table>thead>tr>th{
+    border-bottom: 2px solid #323232!important;
+}
+
+.table>tbody>tr>td{
+    border-top: 1px solid #323232!important;
 }
 
 footer {

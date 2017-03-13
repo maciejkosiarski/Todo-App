@@ -2,7 +2,7 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand">Welcome to <%= title %></a>
+                <a href="/tasks" class="navbar-brand">Welcome to <%= title %></a>
             </div>
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
@@ -12,11 +12,11 @@
                     <li><a href="" data-toggle="modal" data-target="#chatModal">Chat</a></li>
                     <% include ../partials/modals/chat %>
                     <% if(session.passport.user.admin){ %>
-                        <li><a href="/users">Users</a></li>
+                        <li id="users-page"><a href="/users">Users</a></li>
                     <% } %>
-                    <li><a href="/tasks">Todo list</a></li>
-                    <li><a href="/tasks/completed">Completed</a></li>
-                    <li><a href="/notes">Notes</a></li>
+                    <li id="tasks-page"><a href="/tasks">Todo list</a></li>
+                    <li id="completed-page"><a href="/tasks/completed">Completed</a></li>
+                    <li id="notes-page"><a href="/notes">Notes</a></li>
                     <li><a href="/auth/out">Logout</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
