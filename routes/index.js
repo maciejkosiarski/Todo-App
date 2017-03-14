@@ -12,7 +12,6 @@ exports.authCheck = function(req, res, next){
             return next();
         }
     } else {
-        req.flash('info', '<div class="alert alert-danger">You are not logged in.</div>');
         req.session.oldUrl = req.url;
         res.redirect('/auth/signin');
     }

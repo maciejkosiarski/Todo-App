@@ -15,7 +15,7 @@ router.post('/signin', notLoggedIn, passport.authenticate('local-login', {
     failureRedirect: '/auth/signin', 
     failureFlash: true
 }), function(req, res, next){
-    if(req.session.oldUrl){
+    if(req.session.oldUrl && req.session.oldUrl !== '/'){
         var oldUrl = req.session.oldUrl;
         req.session.oldUrl = null;
         res.redirect(oldUrl);
