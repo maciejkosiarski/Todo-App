@@ -62,7 +62,10 @@ app.use(function(req, res, next) {
 app.locals.moment = moment;
 app.locals.title = config.app.title;
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public', {
+    maxage: 86400000
+}));
+
 app.use(routes.authCheck);
 app.use('/auth', routes.auth);
 app.use('/users', routes.users);
