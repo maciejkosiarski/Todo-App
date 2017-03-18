@@ -252,6 +252,10 @@ button:focus {
     border-top: 1px solid #323232!important;
 }
 
+.badge{
+    color: #3998d6!important;
+}
+
 footer {
     color: #3998d6;
     position: absolute;

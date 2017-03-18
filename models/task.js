@@ -9,6 +9,7 @@ var taskSchema = mongoose.Schema({
     _user : {type: String, ref: 'User'},
     name: {type: String, default: ""},
     desc: {type: String, default: ""},
+    priority: {type: Number, default: 0},
     subtasks: [{ type:  String, ref: 'Subtask' }],
     notes: [{ type:  String, ref: 'Note' }],
     completed: {type: Boolean, default: false},
@@ -33,5 +34,18 @@ taskSchema.pre('remove', function (next) {
     Subtask.remove({_task: this._id }).exec();
     next();
 });
+
+taskSchema.statics.countActiveSubtasks = function(tasks) {
+    for(var i = 0; i < tasks.length; i++){
+        var activeSubtasks = 0;
+        tasks[i].subtasks.forEach(function(subtask){
+            if(!subtask.completed){
+                activeSubtasks++;
+            }
+        });
+        tasks[i]['activeSubtasks'] = activeSubtasks;
+    };
+    return tasks;
+};
 
 module.exports = mongoose.model('Task', taskSchema);

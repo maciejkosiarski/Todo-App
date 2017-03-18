@@ -30,11 +30,11 @@ router.post('/', function (req, res) {
             desc : req.body.desc,
             _user : req.user._id
         });
-        newNote.save(function (err, note) {
+        newNote.save(function (err) {
             if (err) {
                 req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
             } else {
-                req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
+                req.flash('info', '<div class="alert alert-success">Note '+newNote.name+' was successful created.</div>');
             }
             res.redirect('/notes');
         });
@@ -59,7 +59,7 @@ router.post('/toTask', uuidValid, function (req, res) {
                 } else {
                     task.notes.push(note._id);
                     task.save();
-                    req.flash('info', '<div class="alert alert-success">Note was successful created.</div>');
+                    req.flash('info', '<div class="alert alert-success">Note '+newNote.name+' was successful created.</div>');
                 }
                 res.redirect('/tasks');
             });
@@ -68,22 +68,22 @@ router.post('/toTask', uuidValid, function (req, res) {
 });
 
 router.put('/', uuidValid, function (req, res) {
-    Note.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
+    Note.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err, note) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Note was not modified.</div>');
         } else {
-            req.flash('info', '<div class="alert alert-success">Note was successful modified.</div>');
+            req.flash('info', '<div class="alert alert-success">Note '+note.name+' was successful modified.</div>');
         }
         res.redirect('/notes');
     });
 });
 
 router.delete('/', uuidValid, function (req, res) {
-    Note.findOneAndRemove({_id: req.body._id}, function (err) {
+    Note.findOneAndRemove({_id: req.body._id}, function (err, note) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Note was not removed.</div>');
         } else {
-            req.flash('info', '<div class="alert alert-success">Note was successful removed.</div>');
+            req.flash('info', '<div class="alert alert-success">Note '+note.name+' was successful removed.</div>');
         }
         res.redirect('/notes');
     });

@@ -42,7 +42,7 @@
                                     </form> 
                                 </li>
                                 <li role="presentation">
-                                    <a data-toggle="collapse"  href="#collapse<%= i %>"><b><%= task.name %></b></a>
+                                    <a data-toggle="collapse"  href="#collapse<%= i %>"><b><%= task.name %> <i class="fa fa-caret-down" aria-hidden="true"></i> <span class="badge"><%= task.activeSubtasks %></span></b></a>
                                 </li>
                                 <li>
                                     <button class="btn btn-default" data-toggle="modal" data-target="#editModal<%= task._id %>">Edit task</button>
@@ -144,8 +144,7 @@
                         $('#info').html(res.info);
                         if(res.subtask){
                             var html = '<li id="'+res.subtask._id+'"><span>'+res.subtask.name+'</span> ';
-                            html += '<form class="complete-subtask-form" style="display:inline" ><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Complete</button></form> ';
-                            html += '<form style="display:inline" method="POST" action="/subtasks" ><input type="hidden" name="_method" value="delete"><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default">Remove</button></form></li>';
+                            html += '<form class="complete-subtask-form" style="display:inline" ><input type="hidden" name="_id" value="'+res.subtask._id+'"><input type="hidden" name="_csrf" value="<%= _csrf %>"><button type="submit" class="btn btn-default"><i class="fa fa-check-square-o" aria-hidden="true">Complete</button></form>';
                             $('#'+res.subtask._task).append(html);
                         }
                     }

@@ -10,9 +10,10 @@ router.get('/', function(req, res) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
             return res.redirect('/');
         }
+        //console.log(Task.countActiveSubtasks(tasks));
         res.render('tasks/index', { 
             page: 'Tasks',
-            tasks:tasks,
+            tasks: Task.countActiveSubtasks(tasks),
             messages: req.flash('info')
         });
     });
@@ -47,7 +48,7 @@ router.post('/', function (req, res) {
             if (err) {
                 req.flash('info', '<div class="alert alert-danger">Error. Task was not created.'+err+'</div>');
             } else {
-                req.flash('info', '<div class="alert alert-success">Task was successful created.</div>');
+                req.flash('info', '<div class="alert alert-success">Task '+newTask.name+' was successful created.</div>');
             }
             res.redirect('/tasks');
         });
@@ -55,11 +56,11 @@ router.post('/', function (req, res) {
 });
 
 router.put('/complete', uuidValid, function (req, res) {
-    Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: true}}, function (err) {
+    Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: true}}, function (err, task) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not complted.</div>');
         } else {
-            req.flash('info', '<div class="alert alert-success">Task was successful completed.</div>');
+            req.flash('info', '<div class="alert alert-success">Task '+task.name+' was successful completed.</div>');
         }
         res.redirect('/tasks');
     });    
@@ -70,18 +71,18 @@ router.put('/complete/all', function (req, res) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not complted.</div>');
         } else {
-            req.flash('info', '<div class="alert alert-success">Tasks was successful completed.</div>');
+            req.flash('info', '<div class="alert alert-success">All tasks was successful completed.</div>');
         }
         res.redirect('/tasks/completed');
     });
 });
 
 router.put('/active', uuidValid, function (req, res) {
-    Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: false}}, function (err) {
+    Task.findOneAndUpdate({_id: req.body._id},{$set:{completed: false}}, function (err, task) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not activated.</div>');
         } else {
-            req.flash('info', '<div class="alert alert-success">Task was successful activated.</div>');
+            req.flash('info', '<div class="alert alert-success">Task '+task.name+' was successful activated.</div>');
         }
         res.redirect('/tasks/completed');
     });
@@ -92,18 +93,18 @@ router.put('/active/all', function (req, res) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not activated.</div>');
         } else {
-            req.flash('info', '<div class="alert alert-success">Tasks was successful activated.</div>');
+            req.flash('info', '<div class="alert alert-success">All tasks was successful activated.</div>');
         }
         res.redirect('/tasks');
     });
 });
 
 router.put('/edit', uuidValid, function (req, res) {
-    Task.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
+    Task.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err, task) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not modified.</div>');
         } else {
-            req.flash('info', '<div class="alert alert-success">Task was successful modified.</div>');
+            req.flash('info', '<div class="alert alert-success">Task '+task.name+' was successful modified.</div>');
         }
         res.redirect('/tasks');
     });
@@ -115,7 +116,7 @@ router.delete('/', uuidValid, function (req, res) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not removed.</div>');
         } else {
             task.remove();
-            req.flash('info', '<div class="alert alert-success">Task was successful removed.</div>');
+            req.flash('info', '<div class="alert alert-success">Task '+task.name+' was successful removed.</div>');
         }
         res.redirect('/tasks/completed');
     });  
@@ -129,7 +130,7 @@ router.delete('/all', function (req, res) {
             for(var i = 0; i < tasks.length; i++){
                 tasks[i].remove();
             }
-            req.flash('info', '<div class="alert alert-success">Tasks was successful removed.</div>');
+            req.flash('info', '<div class="alert alert-success">All completed tasks was successful removed.</div>');
         }
         res.redirect('/tasks');
     });

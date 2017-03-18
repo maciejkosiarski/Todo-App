@@ -41,7 +41,7 @@ router.post('/', uuidValid, function (req, res) {
                 } else {
                     task.subtasks.push(subtask._id);
                     task.save();
-                    info = '<div class="alert alert-success">Subtask was successful created.</div>';
+                    info = '<div class="alert alert-success">Subtask '+newSubtask.name+' was successful created.</div>';
                 }
                 var data = {};
                 data.info = info;
@@ -58,7 +58,7 @@ router.put('/complete', uuidValid, function (req, res) {
         if (err) {
             info = '<div class="alert alert-danger">Error. Subtask was not complted.</div>';
         } else {
-            info = '<div class="alert alert-success">Subtask was successful completed.</div>';
+            info = '<div class="alert alert-success">Subtask '+subtask.name+' was successful completed.</div>';
         }
         var data = {};
         data.info = info;
@@ -73,7 +73,7 @@ router.put('/active', uuidValid, function (req, res) {
         if (err) {
             info = '<div class="alert alert-danger">Error. Subtask was not activated.</div>';
         } else {
-            info = '<div class="alert alert-success">Subtask was successful activated.</div>';
+            info = '<div class="alert alert-success">Subtask '+subtask.name+' was successful activated.</div>';
         }
         var data = {};
         data.info = info;
@@ -83,11 +83,11 @@ router.put('/active', uuidValid, function (req, res) {
 });
 
 router.delete('/', uuidValid, function (req, res) {
-    Subtask.findOneAndRemove({_id: req.body._id}, function (err) {
+    Subtask.findOneAndRemove({_id: req.body._id}, function (err, subtask) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Subtask was not removed.</div>');
         } else {
-            req.flash('info', '<div class="alert alert-success">Subtask was successful removed.</div>');
+            req.flash('info', '<div class="alert alert-success">Subtask '+subtask.name+' was successful removed.</div>');
         }
         res.redirect('/tasks');
     });
