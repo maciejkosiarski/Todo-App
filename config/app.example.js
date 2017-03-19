@@ -30,9 +30,9 @@ module.exports = {
         }
     },
     'priority': {
-        low: 0,
-        medium: 1,
-        high: 2
+        low: 1,
+        medium: 2,
+        high: 3
     }
 };
 

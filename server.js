@@ -60,7 +60,7 @@ app.use(function(req, res, next) {
 });
 
 app.locals.moment = moment;
-app.locals.title = config.app.title;
+app.locals.config = config;
 
 app.use(express.static('public', {
     maxage: 86400000

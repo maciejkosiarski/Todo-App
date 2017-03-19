@@ -9,7 +9,7 @@ var taskSchema = mongoose.Schema({
     _user : {type: String, ref: 'User'},
     name: {type: String, default: ""},
     desc: {type: String, default: ""},
-    priority: {type: Number, default: 0},
+    priority: {type: Number, default: 1},
     subtasks: [{ type:  String, ref: 'Subtask' }],
     notes: [{ type:  String, ref: 'Note' }],
     completed: {type: Boolean, default: false},

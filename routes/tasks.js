@@ -5,7 +5,7 @@ var Task = require('../models/task');
 
 /* GET tasks listing. */
 router.get('/', function(req, res) {
-    Task.find({completed:false, _user:req.user._id}).sort({created: -1}).populate('subtasks notes').exec(function (err, tasks) {
+    Task.find({completed:false, _user:req.user._id}).sort({priority: 'desc'}).populate('subtasks notes').exec(function (err, tasks) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
             return res.redirect('/');
@@ -100,6 +100,7 @@ router.put('/active/all', function (req, res) {
 });
 
 router.put('/edit', uuidValid, function (req, res) {
+    console.log(req.body);
     Task.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err, task) {
         if (err) {
             req.flash('info', '<div class="alert alert-danger">Error. Task was not modified.</div>');

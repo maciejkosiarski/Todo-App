@@ -127,6 +127,17 @@ input{
     border-radius: 0px!important;
 }
 
+select{
+    background-color: #323232!important;
+    border-color: #2B2B2B!important;
+    webkit-box-shadow:none!important;
+    box-shadow:none!important;
+    webkit-transition:none!important;
+    transition:none!important;
+    border-radius: 0px!important;
+    color: #3998d6!important;
+}
+
 textarea{
     background-color: #323232!important;
     border-color: #2B2B2B!important;
