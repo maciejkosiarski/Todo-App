@@ -19,9 +19,9 @@
                         <div class="col-xs-10 col-xs-offset-1">
                             <div class="form-group modal-form">
                                 <label for="priority-input">Priority</label>
-                                <select class="form-control select-input" id="priority-input" name="priority">
+                                <select class="form-control select-input priority-<%= task.priority %>" id="priority-input" name="priority">
                                     <% for(var level in config.priority) { %>
-                                    <option value="<%= config.priority[level] %>"<% if(config.priority[level] == task.priority){ %> selected <% } %> ><%= level %></option>
+                                    <option class="priority-<%= config.priority[level] %>" value="<%= config.priority[level] %>"<% if(config.priority[level] == task.priority){ %> selected <% } %> ><%= level %></option>
                                     <% } %>
                                 </select>
                             </div>

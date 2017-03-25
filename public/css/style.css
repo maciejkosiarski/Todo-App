@@ -265,6 +265,19 @@ button:focus {
 
 .badge{
     color: #3998d6!important;
+    background-color: #323232!important;
+}
+
+.priority-1{
+    color: #00ff04!important;
+}
+
+.priority-2{
+    color: #ffb000!important;
+}
+
+.priority-3{
+    color: #ff000c!important;
 }
 
 footer {

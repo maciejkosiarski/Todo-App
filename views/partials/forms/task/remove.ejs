@@ -1,0 +1,6 @@
+<form method="POST" action="/tasks" >
+    <input type="hidden" name="_method" value="delete">
+    <input type="hidden" name="_id" value="<%= task._id %>">
+    <input type="hidden" name="_csrf" value="<%= _csrf %>">
+    <button type="submit" class="btn btn-default">Remove</button>
+</form>

@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
             req.flash('info', '<div class="alert alert-danger">Error. Tasks was not find.</div>');
             return res.redirect('/');
         }
-        //console.log(Task.countActiveSubtasks(tasks));
+
         res.render('tasks/index', { 
             page: 'Tasks',
             tasks: Task.countActiveSubtasks(tasks),

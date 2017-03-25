@@ -48,4 +48,11 @@ taskSchema.statics.countActiveSubtasks = function(tasks) {
     return tasks;
 };
 
+taskSchema.statics.countTasks = function(tasks) {
+    var tasksCount = {};
+    tasksCount.active = tasks.filter(function(task) { return task.completed === false }).length;
+    tasksCount.completed = tasks.filter(function(task) { return task.completed === true }).length;   
+    return tasksCount;
+};
+
 module.exports = mongoose.model('Task', taskSchema);

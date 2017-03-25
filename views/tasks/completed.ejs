@@ -7,21 +7,13 @@
                 <thead>
                 <tr>
                     <th>
-                        <form method="POST" action="active/all" >
-                            <input type="hidden" name="_method" value="put">
-                            <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                            <button type="submit" class="btn btn-default">Active all</button>
-                        </form>
+                        <% include ../partials/forms/task/active_all %>
                     </th>
                     <th>#</th>
                     <th>Task</th>
                     <th>Finished</th>
                     <th>
-                        <form method="POST" action="all" >
-                            <input type="hidden" name="_method" value="delete">
-                            <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                            <button type="submit" class="btn btn-default">Remove all</button>
-                        </form>
+                        <% include ../partials/forms/task/remove_all %>
                     </th>
                 </tr>
                 </thead>
@@ -31,23 +23,13 @@
                         <% tasks.forEach(function(task){ %>
                             <tr>
                                 <td>
-                                    <form method="POST" action="/tasks/active" >
-                                        <input type="hidden" name="_method" value="put">
-                                        <input type="hidden" name="_id" value="<%= task._id %>">
-                                        <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                        <button type="submit" class="btn btn-default">Active</button>
-                                    </form>
+                                    <% include ../partials/forms/task/active %>
                                 </td>
                                 <td><%= i %></td>
                                 <td style="text-decoration: line-through"><%= task.name %></td>
                                 <td><%= moment(new Date(task.modified)).format('YYYY-MM-DD HH:mm') %></td>
                                 <td>
-                                    <form method="POST" action="/tasks" >
-                                        <input type="hidden" name="_method" value="delete">
-                                        <input type="hidden" name="_id" value="<%= task._id %>">
-                                        <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                        <button type="submit" class="btn btn-default">Remove</button>
-                                    </form>
+                                    <% include ../partials/forms/task/remove %>
                                 </td>
                             </tr>
                         <% i++; %>

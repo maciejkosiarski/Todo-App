@@ -14,8 +14,8 @@
                     <% if(session.passport.user.admin){ %>
                         <li id="users-page"><a href="/users">Users</a></li>
                     <% } %>
-                    <li id="tasks-page"><a href="/tasks">Todo list</a></li>
-                    <li id="completed-page"><a href="/tasks/completed">Completed</a></li>
+                    <li id="tasks-page"><a href="/tasks">Todo list <span class="badge"><%= tasksCount.active %></span></a></li>
+                    <li id="completed-page"><a href="/tasks/completed">Completed <span class="badge"><%= tasksCount.completed %></span></a></li>
                     <li id="notes-page"><a href="/notes">Notes</a></li>
                     <li><a href="/auth/out">Logout</a></li>
                 </ul>

@@ -6,21 +6,10 @@
                 <div class="panel-heading">
                     <ul class="nav nav-pills">
                         <li role="presentation">
-                            <form method="POST" action="tasks/complete/all" >
-                                 <input type="hidden" name="_method" value="put">
-                                 <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                 <button type="submit" class="btn btn-default">Complete all</button>
-                             </form>
+                            <% include ../partials/forms/task/complete_all %>
                         </li>
                         <li role="presentation">
-                            <form method="POST" action="/tasks" >
-                                <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                <div class="form-group task-form">
-                                    <label>New task:</label>
-                                    <input type="text" class="form-control" name='name' value="" autofocus>
-                                    <button type="submit" class="btn btn-default">Add task</button>
-                                </div>                 
-                            </form>
+                            <% include ../partials/forms/task/new %>
                         </li>
                     </ul>
                 </div>
@@ -34,15 +23,10 @@
                         <div class="panel-heading">
                             <ul class="nav nav-pills">
                                 <li role="presentation">
-                                   <form method="POST" action="/tasks/complete" >
-                                        <input type="hidden" name="_method" value="put">
-                                        <input type="hidden" name="_id" value="<%= task._id %>">
-                                        <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                        <button type="submit" class="btn btn-default"><i class="fa fa-check-square-o" aria-hidden="true"></i>Complete</button>
-                                    </form> 
+                                   <% include ../partials/forms/task/complete %>
                                 </li>
                                 <li role="presentation">
-                                    <a data-toggle="collapse"  href="#collapse<%= i %>"><b><%= task.name %> <i class="fa fa-caret-down" aria-hidden="true"></i> <span class="badge"><%= task.activeSubtasks %></span></b></a>
+                                    <a data-toggle="collapse"  href="#collapse<%= i %>"><i class="fa fa-exclamation-circle priority-<%= task.priority %>" aria-hidden="true"></i> <b><%= task.name %> <i class="fa fa-caret-down" aria-hidden="true"></i> <span class="badge"><%= task.activeSubtasks %></span></b></a>
                                 </li>
                                 <li>
                                     <button class="btn btn-default" data-toggle="modal" data-target="#editModal<%= task._id %>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Edit</button>
@@ -55,52 +39,19 @@
                         </div>
                         <div id="collapse<%= i %>" class="panel-collapse collapse">
                             <div class="panel-body">
-                                <form class="create-form new-subtask" >
-                                    <input type="hidden" name="_id" value="<%= task._id %>">
-                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <label>New subtask:</label>
-                                            <input type="text" class="form-control inputs" name='name' >
-                                            <button type="submit" class="btn btn-default">Add</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <form class="create-form" method="POST" action="/notes/toTask" >
-                                    <input type="hidden" name="_id" value="<%= task._id %>">
-                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <label>New note:</label>
-                                            <input type="text" class="form-control inputs" name='desc' >
-                                            <button type="submit" class="btn btn-default">Add</button>
-                                        </div>
-                                    </div>
-                                </form>
-                                <p><b>Description:</b><%= task.desc %></p>
+                                <% include ../partials/forms/subtask/new %>
+                                <% include ../partials/forms/note/new %>
+                               <p><b>Description:</b><%= task.desc %></p>
                                 <b>Subtasks:</b>
                                 <ul id="<%= task._id %>">
                                     <% task.subtasks.forEach(function(subtask){ %>
                                         <li id="<%= subtask._id %>">
                                             <span <% if(subtask.completed){%>style="text-decoration: line-through"<% } %>><%= subtask.name %></span>
                                             <% if(subtask.completed){%>
-                                                <form class="active-subtask-form" style="display:inline" >
-                                                    <input type="hidden" name="_id" value="<%= subtask._id %>">
-                                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                                    <button type="submit" class="btn btn-default">Active</button>
-                                                </form>
-                                                    <form style="display:inline" method="POST" action="/subtasks" >
-                                                    <input type="hidden" name="_method" value="delete">
-                                                    <input type="hidden" name="_id" value="<%= subtask._id %>">
-                                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                                    <button type="submit" class="btn btn-default">Remove</button>
-                                                </form>
+                                                <% include ../partials/forms/subtask/active %>
+                                                <% include ../partials/forms/subtask/remove %>
                                             <% } else { %>
-                                                <form class="complete-subtask-form" style="display:inline" >
-                                                    <input type="hidden" name="_id" value="<%= subtask._id %>">
-                                                    <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                                    <button type="submit" class="btn btn-default"><i class="fa fa-check-square-o" aria-hidden="true"></i>Complete</button>
-                                                </form>
+                                                <% include ../partials/forms/subtask/complete %>
                                             <% } %>
                                         </li>
                                     <% }); %>
@@ -109,12 +60,7 @@
                                 <% task.notes.forEach(function(note){ %>
                                     <li>
                                         <%= note.desc %>
-                                        <form style="display:inline" method="POST" action="/notes" >
-                                            <input type="hidden" name="_method" value="delete">
-                                            <input type="hidden" name="_id" value="<%= note._id %>">
-                                            <input type="hidden" name="_csrf" value="<%= _csrf %>">
-                                            <button type="submit" class="btn btn-default">Remove</button>
-                                        </form>
+                                        <% include ../partials/forms/note/remove %>
                                     </li>    
                                 <% }); %>
                             </div>

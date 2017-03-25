@@ -15,6 +15,7 @@ var validator       = require('express-validator');
 var app = express();
 
 var config  = require('./config/app');
+var Task = require('./models/task');
 
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database.mongodb.url, config.database.mongodb.options);
@@ -54,6 +55,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(csrf());
 app.use(function(req, res, next) {
+    if (req.user) {
+        Task.find({_user:req.user._id}).exec(function (err, tasks) {
+            if(err) throw err;
+            res.locals.tasksCount = Task.countTasks(tasks);
+        });
+    }
     res.locals._csrf = req.csrfToken();
     res.locals.session = req.session;
     return next();
