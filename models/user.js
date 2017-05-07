@@ -1,13 +1,13 @@
 var sha1 = require('locutus/php/strings/sha1');
 var mongoose = require('mongoose');
-var uuid = require('node-uuid');
+var uuidV4 = require('uuid/v4');
 
 var config = require('../config/app.js');
 var Task = require('../models/task');
 var Note = require('../models/note');
 
 var userSchema = mongoose.Schema({
-    _id: {type: String, default: uuid.v4},
+    _id: {type: String, default: uuidV4},
     nick: {type: String, unique : true, default: ""},
     email: {type: String, default: ""},
     pass: {type: String, default: ""},

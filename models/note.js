@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
-var uuid = require('node-uuid');
+var uuidV4 = require('uuid/v4');
 
 var noteSchema = mongoose.Schema({
-    _id: {type: String, default: uuid.v4},
+    _id: {type: String, default: uuidV4},
     _user : {type: String, ref: 'User', default: false},
     _task : { type: String, ref: 'Task', default: false },
     name: {type: String, default: ""},

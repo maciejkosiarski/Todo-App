@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
-var uuid = require('node-uuid');
+var uuidV4 = require('uuid/v4');
 
 
 var subtaskSchema = mongoose.Schema({
-    _id: {type: String, default: uuid.v4},
+    _id: {type: String, default: uuidV4},
     _task : {type: String, ref: 'Task'},
     name: {type: String, default: ""},
     completed: {type: Boolean, default: false},
