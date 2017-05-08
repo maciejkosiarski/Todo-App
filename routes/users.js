@@ -4,12 +4,9 @@ var router = express.Router();
 var User = require('../models/user');
 
 /* GET users listing. */
-router.get('/', function(req, res) {
+router.get('/', function(req, res, next) {
     User.find({}).sort({created: -1}).exec(function (err, users) {
-        if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Users was not find.</div>');
-            return res.redirect('/');
-        }
+        if (err) return next(err);
         res.render('users/index', {
             page:'Users',
             users:users,
@@ -19,7 +16,7 @@ router.get('/', function(req, res) {
 });
 
 /* POST new user. */
-router.post('/', function (req, res) {
+router.post('/', function (req, res, next) {
     req.checkBody('nick', 'Invalid nick').notEmpty().isAlphanumeric();
     req.checkBody('pass', 'Invalid pass').notEmpty().isLength({min:8});
     var errors = req.validationErrors();
@@ -32,35 +29,26 @@ router.post('/', function (req, res) {
         });
         newUser.pass = newUser.generateHash(req.body.pass);
         newUser.save(function (err) {
-            if (err) {
-                req.flash('info', '<div class="alert alert-danger">Error: '+err.message+' User was not created.</div>');
-            } else {
-                req.flash('info', '<div class="alert alert-success">User was successful created.</div>');
-            }
+            if (err) return next(err);
+            req.flash('info', '<div class="alert alert-success">User was successful created.</div>');
             res.redirect('/users');
         });
     }
 });
 
-router.put('/', uuidValid, function (req, res) {
+router.put('/', uuidValid, function (req, res, next) {
     User.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err) {
-        if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Your data was not modified.</div>');
-        } else {
-            req.flash('info', '<div class="alert alert-success">Your data was successful modified.</div>');
-        }
+        if (err) return next(err);
+        req.flash('info', '<div class="alert alert-success">Your data was successful modified.</div>');
         res.redirect('/tasks');
     });
 });
 
-router.delete('/', uuidValid, function (req, res) {
+router.delete('/', uuidValid, function (req, res, next) {
     User.findOne({_id: req.body._id}, function (err, user) {
-        if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. User was not removed.</div>');
-        } else {
-            user.remove();
-            req.flash('info', '<div class="alert alert-success">User was successful removed.</div>');
-        }
+        if (err) return next(err);
+        user.remove();
+        req.flash('info', '<div class="alert alert-success">User was successful removed.</div>');
         res.redirect('/users');
     });
 });

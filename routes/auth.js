@@ -5,7 +5,7 @@ var passport = require('passport');
 var User = require('../models/user');
 require('../config/passport.js')(passport);
 
-router.get('/signin', notLoggedIn, function(req, res, next) {
+router.get('/signin', notLoggedIn, function(req, res) {
     res.render('auth/signin', {
         messages: req.flash('info')
     });
@@ -14,7 +14,7 @@ router.get('/signin', notLoggedIn, function(req, res, next) {
 router.post('/signin', notLoggedIn, passport.authenticate('local-login', {
     failureRedirect: '/auth/signin', 
     failureFlash: true
-}), function(req, res, next){
+}), function(req, res){
     if(req.session.oldUrl && req.session.oldUrl !== '/'){
         var oldUrl = req.session.oldUrl;
         req.session.oldUrl = null;
@@ -24,14 +24,11 @@ router.post('/signin', notLoggedIn, passport.authenticate('local-login', {
     }
 });
 
-router.get('/out', function (req, res) {
+router.get('/out', function (req, res, next) {
     User.update({_id:req.user._id},{$set:{logged: false}}, function (err) {
-        if(err){
-            req.flash('info', '<div class="alert alert-danger">Cant logout. '+err+'</div>'); 
-        } else{
-            req.logout();
-            req.flash('info', '<div class="alert alert-success">Bye</div>'); 
-        }
+        if(err) return next(err);
+        req.logout();
+        req.flash('info', '<div class="alert alert-success">Bye</div>'); 
         res.redirect('/auth/signin');
     });
 });

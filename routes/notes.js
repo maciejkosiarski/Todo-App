@@ -5,12 +5,9 @@ var Note = require('../models/note');
 var Task = require('../models/task');
 
 /* GET notes listing. */
-router.get('/', function(req, res) {
+router.get('/', function(req, res, next) {
     Note.find({ _task:false, _user:req.user._id }).sort({created: -1}).exec(function (err, notes) {
-        if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Notes was not find.</div>');
-            return res.redirect('/');
-        }
+        if (err) return next(err);
         res.render('notes/index', {
             page: 'Notes',
             notes:notes,
@@ -20,7 +17,7 @@ router.get('/', function(req, res) {
 });
 
 /* POST new single independent note */
-router.post('/', function (req, res) {
+router.post('/', function (req, res, next) {
     if(req.body.name === '' || req.body.desc === ''){
         req.flash('info', '<div class="alert alert-danger">Error. Note was not created. Invalid data.</div>');
         return res.redirect('/notes');
@@ -31,18 +28,15 @@ router.post('/', function (req, res) {
             _user : req.user._id
         });
         newNote.save(function (err) {
-            if (err) {
-                req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
-            } else {
-                req.flash('info', '<div class="alert alert-success">Note '+newNote.name+' was successful created.</div>');
-            }
+            if (err) return next(err);
+            req.flash('info', '<div class="alert alert-success">Note '+newNote.name+' was successful created.</div>');
             res.redirect('/notes');
         });
     }
 });
 
 /* POST new note to specific task */
-router.post('/toTask', uuidValid, function (req, res) {
+router.post('/toTask', uuidValid, function (req, res, next) {
     Task.findById(req.body._id, function (err, task) {
         if(err || req.body.desc === ''){
             req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
@@ -54,37 +48,28 @@ router.post('/toTask', uuidValid, function (req, res) {
                 _task : task._id
             });
             newNote.save(function (err, note) {
-                if (err) {
-                    req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
-                } else {
-                    task.notes.push(note._id);
-                    task.save();
-                    req.flash('info', '<div class="alert alert-success">Note '+newNote.name+' was successful created.</div>');
-                }
+                if (err) return next(err);
+                task.notes.push(note._id);
+                task.save();
+                req.flash('info', '<div class="alert alert-success">Note '+newNote.name+' was successful created.</div>');
                 res.redirect('/tasks');
             });
         }
     });
 });
 
-router.put('/', uuidValid, function (req, res) {
+router.put('/', uuidValid, function (req, res, next) {
     Note.findOneAndUpdate({_id: req.body._id},{$set: req.body}, function (err, note) {
-        if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Note was not modified.</div>');
-        } else {
-            req.flash('info', '<div class="alert alert-success">Note '+note.name+' was successful modified.</div>');
-        }
+        if (err) return next(err);
+        req.flash('info', '<div class="alert alert-success">Note '+note.name+' was successful modified.</div>');
         res.redirect('/notes');
     });
 });
 
-router.delete('/', uuidValid, function (req, res) {
+router.delete('/', uuidValid, function (req, res, next) {
     Note.findOneAndRemove({_id: req.body._id}, function (err, note) {
-        if (err) {
-            req.flash('info', '<div class="alert alert-danger">Error. Note was not removed.</div>');
-        } else {
-            req.flash('info', '<div class="alert alert-success">Note '+note.name+' was successful removed.</div>');
-        }
+        if (err) return next(err);
+        req.flash('info', '<div class="alert alert-success">Note '+note.name+' was successful removed.</div>');
         res.redirect('/notes');
     });
 });
