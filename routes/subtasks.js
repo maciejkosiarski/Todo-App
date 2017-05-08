@@ -69,8 +69,14 @@ router.put('/active', uuidValid, function (req, res, next) {
 router.delete('/', uuidValid, function (req, res, next) {
     Subtask.findOneAndRemove({_id: req.body._id}, function (err, subtask) {
         if (err) return next(err);
-        req.flash('info', '<div class="alert alert-success">Subtask '+subtask.name+' was successful removed.</div>');
-        res.redirect('/tasks');
+        Task.findById(subtask._task, function (err, task) {
+            if (err) return next(err);
+            var place = task.subtasks.indexOf(subtak._id);
+            task.subtakss.splice(place, 1);
+            task.save();
+            req.flash('info', '<div class="alert alert-success">Subtask '+subtask.name+' was successful removed.</div>');
+            res.redirect('/tasks');
+        });
     });
 });
 

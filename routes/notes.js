@@ -69,8 +69,19 @@ router.put('/', uuidValid, function (req, res, next) {
 router.delete('/', uuidValid, function (req, res, next) {
     Note.findOneAndRemove({_id: req.body._id}, function (err, note) {
         if (err) return next(err);
-        req.flash('info', '<div class="alert alert-success">Note '+note.name+' was successful removed.</div>');
-        res.redirect('/notes');
+        if (note._task !== 'false'){
+            Task.findById(note._task, function (err, task) {
+                if (err) return next(err);
+                var place = task.notes.indexOf(note._id);
+                task.notes.splice(place, 1);
+                task.save();
+                req.flash('info', '<div class="alert alert-success">Note from '+task.name+' was successful removed.</div>');
+                res.redirect('/tasks');
+            });
+        } else {
+            req.flash('info', '<div class="alert alert-success">Note '+note.name+' was successful removed.</div>');
+            res.redirect('/notes');
+        }
     });
 });
 
