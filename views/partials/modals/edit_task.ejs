@@ -7,8 +7,8 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Edit task</h4>
                 <ul>
-                <li>last modified: <%= moment(new Date(task.modified)).format('YYYY-MM-DD HH:mm') %></li>
-            </ul>
+                    <li>last modified: <%= moment(new Date(task.modified)).format('YYYY-MM-DD HH:mm') %></li>
+                </ul>
             </div>
             <form method="POST" action="/tasks/edit" >
                 <input type="hidden" name="_method" value="put">

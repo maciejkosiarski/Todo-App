@@ -3,6 +3,7 @@ exports.users = require('./users');
 exports.tasks = require('./tasks');
 exports.subtasks = require('./subtasks');
 exports.notes = require('./notes');
+exports.notifications = require('./notifications');
 exports.authCheck = function(req, res, next){
     if (req.user || req.path==='/auth/signin') {
         if(req.path==='/users' && !req.user.admin){

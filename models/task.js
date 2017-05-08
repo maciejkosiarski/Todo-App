@@ -3,6 +3,7 @@ var uuidV4 = require('uuid/v4');
 
 var Note = require('./note');
 var Subtask = require('./subtask');
+var Notification = require('./notification');
 
 var taskSchema = mongoose.Schema({
     _id: {type: String, default: uuidV4},
@@ -12,6 +13,7 @@ var taskSchema = mongoose.Schema({
     priority: {type: Number, default: 1},
     subtasks: [{ type:  String, ref: 'Subtask' }],
     notes: [{ type:  String, ref: 'Note' }],
+    notifications: [{ type:  String, ref: 'Notification' }],
     completed: {type: Boolean, default: false},
     created: {type: Date, default: Date.now},
     modified: {type: Date, default: Date.now}
