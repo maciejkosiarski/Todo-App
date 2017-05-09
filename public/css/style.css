@@ -6,6 +6,13 @@ body {
     font-size: 13px;
 }
 
+pre{
+    color: #3998d6!important;
+    background-color: #2b2b2b!important;
+    border: 1px solid #3998d6!important;
+    border-radius: 0px!important;
+}
+
 .navbar-default{
     background-color: #2B2B2B!important;
     border-color: #2B2B2B!important;
@@ -244,6 +251,10 @@ button:focus {
     color: #ff000c!important;
     background-color: #2B2B2B!important;
     border-color: #2B2B2B!important;
+}
+
+.error-header{
+    color: #3998d6!important;
 }
 
 #users{

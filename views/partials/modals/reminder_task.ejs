@@ -8,22 +8,45 @@
                 <h4 class="modal-title">Reminder</h4>
             </div>
             <div class="modal-body">
-                <form method="POST" action="/tasks/edit" >
+                <b>New notifications:</b>
+                <form method="POST" action="/notifications" >
                     <input type="hidden" name="_method" value="post">
                     <input type="hidden" name="_id" value="<%= task._id %>">
                     <input type="hidden" name="_csrf" value="<%= _csrf %>">
                     <div class="row">
                         <div class="col-xs-10 col-xs-offset-1">
                             <div class="form-group modal-form">
-
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="browser" checked>Browser</label>
+                                </div>
+                                <div class="checkbox disabled">
+                                    <label><input type="checkbox" name="email" disabled>Email</label>
+                                </div>
+                                <div class="checkbox disabled">
+                                    <label><input type="checkbox" name="loop" disabled>Loop</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Due date</label>
+                                <input type="text" class="form-control" name="due_date" value="<%= moment().format('YYYY-MM-DD HH:mm') %>">
                             </div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-default">Add notification</button>
                 </form>
+                <hr />
+                <b>Notifications:</b>
+                <ul>
+                    <% task.notifications.forEach(function(notification){ %>
+                        <li id="<%= notification._id %>">
+                            <span><%= moment(notification.due_date ).format('YYYY-MM-DD HH:mm') %></span>
+                            <% include ../forms/notification/remove %>
+                        </li>
+                    <% }); %>
+                </ul>
             </div>
             <div class="modal-footer">
-
+                
             </div>
         </div>
     </div>

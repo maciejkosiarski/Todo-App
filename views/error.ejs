@@ -1,4 +1,4 @@
-<% include ../partials/head %>
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
+<% include ./partials/head %>
+<h1 class="error-header"><%= message %></h1>
+<h2 class="error-header"><%= error.status %></h2>
 <pre><%= error.stack %></pre>

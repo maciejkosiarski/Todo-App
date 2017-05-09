@@ -17,22 +17,34 @@ var Task = require('../models/task');
 //    });
 //});
 
-/* POST new single independent note */
+/* POST new notification to specific task */
 router.post('/', function (req, res, next) {
-    if(req.body.name === '' || req.body.desc === ''){
-        req.flash('info', '<div class="alert alert-danger">Error. Note was not created. Invalid data.</div>');
-        return res.redirect('/notes');
+    req.checkBody('due_date', 'Invalid due date.').notEmpty().isDate();
+    var errors = req.validationErrors();
+    if(errors) {
+        console.log(errors);
+        req.flash('info', '<div class="alert alert-danger">'+errors[0].msg+'</div>');
+        return res.redirect('/tasks');
     } else {
-        var newNote = new Note({
-            name : req.body.name,
-            desc : req.body.desc,
-            _user : req.user._id
-        });
-        newNote.save(function (err) {
+        Task.findById(req.body._id, function (err, task) {
             if (err) return next(err);
             
-            req.flash('info', '<div class="alert alert-success">Note '+newNote.name+' was successful created.</div>');
-            res.redirect('/notes');
+            var newNotification = new Notification({
+                _user: req.user,
+                _task: task,
+                browser : req.body.browser,
+                email : req.body.email,
+                loop : req.body.loop,
+                due_date : req.body.due_date
+            });
+            newNotification.save(function (err, notification) {
+                if (err) return next(err);
+                
+                task.notifications.push(notification._id);
+                task.save();
+                req.flash('info', '<div class="alert alert-success">Notification was successful created.</div>');
+                res.redirect('/tasks');
+            });
         });
     }
 });

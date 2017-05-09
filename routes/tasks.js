@@ -5,7 +5,7 @@ var Task = require('../models/task');
 
 /* GET tasks listing. */
 router.get('/', function(req, res, next) {
-    Task.find({completed:false, _user:req.user._id}).sort({priority: 'desc'}).populate('subtasks notes').exec(function (err, tasks) {
+    Task.find({completed:false, _user:req.user._id}).sort({priority: 'desc'}).populate('subtasks notes notifications').exec(function (err, tasks) {
         if (err) return next(err)
         res.render('tasks/index', { 
             page: 'Tasks',

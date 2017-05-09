@@ -79,6 +79,7 @@ app.use('/users', routes.users);
 app.use('/tasks', routes.tasks);
 app.use('/subtasks', routes.subtasks);
 app.use('/notes', routes.notes);
+app.use('/notifications', routes.notifications);
 
 io.use(function(socket, next){
     session(socket.request, socket.request.res, next);
