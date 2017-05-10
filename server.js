@@ -17,6 +17,10 @@ var app = express();
 var config  = require('./config/app');
 var Task = require('./models/task');
 
+//cron jobs
+require('./cron_jobs/test');
+require('./cron_jobs/remove-messages');
+
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database.mongodb.url, config.database.mongodb.options);
 

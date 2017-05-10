@@ -36,7 +36,7 @@
                                 <% include ../partials/modals/edit_task %>
                                 </li>
                                 <li class="pull-right">
-                                    <button class="btn btn-default" data-toggle="modal" data-target="#reminderModal<%= task._id %>"><i class="fa fa-bell-o" aria-hidden="true"></i>Reminder</button>
+                                    <button class="btn btn-default" data-toggle="modal" data-target="#reminderModal<%= task._id %>"><i class="fa fa-bell<% if(!task.notifications.length){%>-slash<% } %>-o" aria-hidden="true"></i>Reminder</button>
                                 <% include ../partials/modals/reminder_task %>
                                 </li>
                             </ul>
