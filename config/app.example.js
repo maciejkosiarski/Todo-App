@@ -10,6 +10,10 @@ module.exports = {
         cookie: '',
         session: ''
     },
+    'logs': {
+        cron: '/logs/cron.log',
+        access: '/logs/access.log'
+    },
     'database': {
         'mongodb':{
             url: 'mongodb://user:secret@ds115110.mlab.com:111111/app',

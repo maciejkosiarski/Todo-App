@@ -116,6 +116,10 @@ pre{
     padding-bottom: 10px;
 }
 
+.message-row-user{
+    color: #3998d6!important;
+}
+
 .form-group > label{
     display: inline;
 }

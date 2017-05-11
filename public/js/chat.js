@@ -7,7 +7,7 @@ $(document).ready(function () {
         if (messages.length) {
             for (var i = 0; i < messages.length; i++) {
                 var html = '<div class="message-row">';
-                html += '<div>' + messages[i]._user.nick + ' <span style="float:right">' + moment(messages[i].created).format('YYYY-MM-DD HH:mm') + '</span></div>';
+                html += '<div class="message-row-user">' + messages[i]._user.nick + ' <span style="float:right">' + moment(messages[i].created).format('YYYY-MM-DD HH:mm') + '</span></div>';
                 html += '<span>' + messages[i].content + '</span>';
                 html += '</div>';
                 $('#messages').append(html);
@@ -38,7 +38,7 @@ $(document).ready(function () {
 
     socket.on('chat message', function (msg) {
         var html = '<div class="message-row">';
-        html += '<div>' + msg.user + ' <span style="float:right">' + moment(msg.created).format('HH:mm:ss') + '</span></div>';
+        html += '<div class="message-row-user">' + msg.user + ' <span style="float:right">' + moment(msg.created).format('HH:mm:ss') + '</span></div>';
         html += '<span>' + msg.content + '</span>';
         html += '</div>';
         $('#messages').append(html);
