@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('#chatModal').on('shown.bs.modal', function () {
         $('#message').focus();
-    })
+    });
     var socket = io();
     socket.on('messages', function (messages, err) {
         if (messages.length) {
@@ -52,5 +52,54 @@ $(document).ready(function () {
     socket.on('er', function (er) {
         $('#info').html('<div class="alert alert-danger">' + er + '</div>');
     });
+    
+    socket.on('notifications', function (data) {
+        notify(data);
+    });
 
 });
+
+function notify(data) {
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+    } else if (Notification.permission === "granted") {
+        for(var i = 0; i < data.notifications.length; i++){
+            var options = {
+                body: data.notifications[i]._task.name,
+                dir: "ltr"
+            };
+            var notification = new Notification('Todo App', options);
+            removeNotification(data.notifications[i]._id, data._csrf);
+        }
+    } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission(function (permission) {
+            if (!('permission' in Notification)) {
+                Notification.permission = permission;
+            }
+            if (permission === "granted") {
+                for(var i = 0; i < data.notifications.length; i++){
+                    var options = {
+                        body: data.notifications[i]._task.name,
+                        dir: "ltr"
+                    };
+                    var notification = new Notification('Todo App', options);
+                    removeNotification(data.notifications[i]._id, data._csrf);
+                }
+            }
+        });
+    }
+}
+
+function removeNotification(id, csrf) {
+    $.ajax({
+        url: '/notifications',
+        type: 'DELETE',
+        data: {
+            _id: id,
+            _csrf: csrf
+        },
+        success: function(result) {
+            console.log(result);
+        }
+    });
+}
