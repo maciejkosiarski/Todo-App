@@ -7,13 +7,15 @@
                 <thead>
                 <tr>
                     <th>
-                        <% include ../partials/forms/task/active_all %>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#activeAllModal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Active all</button>
+                        <% include ../partials/modals/active_all_tasks %>
                     </th>
                     <th>#</th>
                     <th>Task</th>
                     <th>Finished</th>
                     <th>
-                        <% include ../partials/forms/task/remove_all %>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#removeAllModal"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>Remove all</button>
+                        <% include ../partials/modals/remove_all_tasks %>
                     </th>
                 </tr>
                 </thead>

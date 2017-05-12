@@ -59,17 +59,20 @@ $(document).ready(function () {
 
 });
 
-function notify(data) {
+function notify(notifications) {
     if (!("Notification" in window)) {
         alert("This browser does not support desktop notification");
     } else if (Notification.permission === "granted") {
-        for(var i = 0; i < data.notifications.length; i++){
+        for(var i = 0; i < notifications.length; i++){
             var options = {
-                body: data.notifications[i]._task.name,
+                icon: './img/reminder-icon.png',
+                body: notifications[i]._task.name,
                 dir: "ltr"
             };
             var notification = new Notification('Todo App', options);
-            removeNotification(data.notifications[i]._id, data._csrf);
+            if(!notifications[i].loop){
+                removeNotification(notifications[i]._id);
+            }
         }
     } else if (Notification.permission !== 'denied') {
         Notification.requestPermission(function (permission) {
@@ -77,29 +80,29 @@ function notify(data) {
                 Notification.permission = permission;
             }
             if (permission === "granted") {
-                for(var i = 0; i < data.notifications.length; i++){
+                for(var i = 0; i < notifications.length; i++){
                     var options = {
-                        body: data.notifications[i]._task.name,
+                        icon: './img/reminder-icon.png',
+                        body: notifications[i]._task.name,
                         dir: "ltr"
                     };
                     var notification = new Notification('Todo App', options);
-                    removeNotification(data.notifications[i]._id, data._csrf);
+                    if(!notifications[i].loop){
+                        removeNotification(notifications[i]._id);
+                    }
                 }
             }
         });
     }
 }
 
-function removeNotification(id, csrf) {
+function removeNotification(id) {
     $.ajax({
-        url: '/notifications',
+        url: '/notifications/ajax',
         type: 'DELETE',
         data: {
             _id: id,
-            _csrf: csrf
-        },
-        success: function(result) {
-            console.log(result);
+            _csrf: $('meta[name="_csrf"]').attr('content')
         }
     });
 }

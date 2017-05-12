@@ -86,7 +86,6 @@ app.use('/notes', routes.notes);
 app.use('/notifications', routes.notifications);
 
 io.use(function(socket, next){
-    csrf();
     session(socket.request, socket.request.res, next);
 });
 

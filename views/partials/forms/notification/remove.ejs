@@ -2,5 +2,5 @@
     <input type="hidden" name="_method" value="delete">
     <input type="hidden" name="_id" value="<%= notification._id %>">
     <input type="hidden" name="_csrf" value="<%= _csrf %>">
-    <button type="submit" class="btn btn-default">Remove</button>
+    <button type="submit" class="btn btn-default"><% if(notification.loop){%><i class="fa fa-refresh" aria-hidden="true"></i><% } %> Remove</button>
 </form>

@@ -49,6 +49,18 @@ router.delete('/', uuidValid, function (req, res, next) {
     });
 });
 
+router.delete('/ajax', uuidValid, function (req, res, next) {
+    Notification.findOneAndRemove({_id: req.body._id}, function (err, notification) {
+        if (err) return next(err);
+         Task.findById(notification._task, function (err, task) {
+            if (err) return next(err);
+            var place = task.notifications.indexOf(notification._id);
+            task.notifications.splice(place, 1);
+            task.save();
+        });
+    });
+});
+
 module.exports = router;
 
 function uuidValid(req, res, next){
