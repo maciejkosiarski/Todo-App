@@ -19,12 +19,11 @@ pre{
 }
 
 .navbar-default .navbar-nav>li>a{
-    color: #bfbfbf!important;
-    #dcdcdc
+    color: #3998d6!important;
 }
 
 .navbar-default .navbar-nav>li>a:hover{
-    color: #dcdcdc!important;
+    color: #296c99!important
 }
 
 .nav>li>a{
@@ -39,9 +38,11 @@ pre{
 .navbar-right>li:hover{
     border-bottom: 2px solid;
     border-radius: 0px!important;
+    color: #3998d6!important;
 }
 
 .active-page{
+    color: #3998d6!important;
     border-bottom: 2px solid;
     border-radius: 0px!important;
 }

@@ -9,15 +9,16 @@
                     <li><a>Logged as <b><%= session.passport.user.nick %></b></a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="" data-toggle="modal" data-target="#chatModal">Chat</a></li>
+                    <li><a href="" data-toggle="modal" data-target="#chatModal"><i class="fa fa-commenting-o" aria-hidden="true"></i> Chat</a></li>
                     <% include ../partials/modals/chat %>
                     <% if(session.passport.user.admin){ %>
-                        <li id="users-page"><a href="/users">Users</a></li>
+                        <li id="users-page"><a href="/users"><i class="fa fa-users" aria-hidden="true"></i> Users</a></li>
                     <% } %>
-                    <li id="tasks-page"><a href="/tasks">Todo list <span class="badge"><%= tasksCount.active %></span></a></li>
-                    <li id="completed-page"><a href="/tasks/completed">Completed <span class="badge"><%= tasksCount.completed %></span></a></li>
-                    <li id="notes-page"><a href="/notes">Notes</a></li>
-                    <li><a href="/auth/out">Logout</a></li>
+                    <li id="tasks-page"><a href="/tasks"><i class="fa fa-tasks" aria-hidden="true"></i> Todo list <span class="badge"><%= tasksCount.active %></span></a></li>
+                    <li id="completed-page"><a href="/tasks/completed"><i class="fa fa-tasks" aria-hidden="true"></i> Completed <span class="badge"><%= tasksCount.completed %></span></a></li>
+                    <li id="notes-page"><a href="/notes"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> Notes</a></li>
+                    <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i> Settings</a></li>
+                    <li><a href="/auth/out"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
