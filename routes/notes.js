@@ -38,8 +38,9 @@ router.post('/', function (req, res, next) {
 /* POST new note to specific task */
 router.post('/toTask', uuidValid, function (req, res, next) {
     Task.findById(req.body._id, function (err, task) {
-        if(err || req.body.desc === ''){
-            req.flash('info', '<div class="alert alert-danger">Error. Note was not created.</div>');
+        if (err) return next(err);
+        if(req.body.desc === ''){
+            req.flash('info', '<div class="alert alert-danger">Error. Note description is empty.</div>');
             return res.redirect('/tasks');
         } else {
             var newNote = new Note({

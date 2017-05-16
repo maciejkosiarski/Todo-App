@@ -4,20 +4,8 @@ var router = express.Router();
 var Task = require('../models/task');
 var Subtask = require('../models/subtask');
 
-/* GET notes listing. */
-//router.get('/', function(req, res) {
-//    Note.find({ _task:false, _user:req.user._id }).sort({created: -1}).exec(function (err, notes) {
-//        if(err) return next(err);
-//        res.render('notes/index', {
-//            page: 'Notes',
-//            notes:notes,
-//            messages: req.flash('info')
-//        });
-//    });
-//});
-
 /* POST new subtask */
-router.post('/', uuidValid, function (req, res, next) {
+router.post('/', uuidValidAjax, function (req, res, next) {
     //create subtask to specific task
     Task.findById(req.body._id, function (err, task) {
         if(err || req.body.name === ''){
@@ -44,7 +32,7 @@ router.post('/', uuidValid, function (req, res, next) {
     });
 });
 
-router.put('/complete', uuidValid, function (req, res, next) {
+router.put('/complete', uuidValidAjax, function (req, res, next) {
     Subtask.findOneAndUpdate({_id: req.body._id},{$set:{completed: true}}, function (err, subtask) {
         if (err) return next(err);
         var data = {
@@ -55,7 +43,7 @@ router.put('/complete', uuidValid, function (req, res, next) {
     });
 });
 
-router.put('/active', uuidValid, function (req, res, next) {
+router.put('/active', uuidValidAjax, function (req, res, next) {
     Subtask.findOneAndUpdate({_id: req.body._id},{$set:{completed: false}}, function (err, subtask) {
         if (err) return next(err);
         var data = {
@@ -88,6 +76,19 @@ function uuidValid(req, res, next){
     if(errors) {
         req.flash('info', '<div class="alert alert-danger">Error. UUID is not valid.</div>');
         res.redirect('/tasks');
+    } else {
+        return next();
+    }
+}
+
+function uuidValidAjax(req, res, next){
+    req.checkBody('_id', 'Invalid uuid').notEmpty().isUUID(4);
+    var errors = req.validationErrors();
+    if(errors) {
+        var data = {
+            info: '<div class="alert alert-danger">Error. UUID is not valid.</div>'
+        };
+        res.send(data);
     } else {
         return next();
     }

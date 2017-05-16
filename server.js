@@ -18,7 +18,7 @@ var config  = require('./config/app');
 var Task = require('./models/task');
 
 //cron jobs
-require('./cron_jobs/test');
+//require('./cron_jobs/test');
 require('./cron_jobs/remove-messages');
 
 mongoose.Promise = global.Promise;
@@ -89,7 +89,7 @@ io.use(function(socket, next){
     session(socket.request, socket.request.res, next);
 });
 
-io.on( "connection", function(socket){
+io.on('connection', function(socket){
     require('./routes/chat')(socket, io);
     require('./cron_jobs/reminder')(socket);
 });

@@ -50,7 +50,8 @@ $(document).ready(function () {
     });
 
     socket.on('er', function (er) {
-        $('#info').html('<div class="alert alert-danger">' + er + '</div>');
+        $('.chat-alert').html(er);
+        $('.chat-alert').addClass('alert alert-danger');
     });
     
     socket.on('notifications', function (data) {
