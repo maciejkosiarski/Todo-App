@@ -60,7 +60,7 @@ router.delete('/', uuidValid, function (req, res, next) {
         Task.findById(subtask._task, function (err, task) {
             if (err) return next(err);
             var place = task.subtasks.indexOf(subtask._id);
-            task.subtakss.splice(place, 1);
+            task.subtasks.splice(place, 1);
             task.save();
             req.flash('info', '<div class="alert alert-success">Subtask '+subtask.name+' was successful removed.</div>');
             res.redirect('/tasks');
