@@ -2,7 +2,7 @@ var User = require('../models/user');
 var Message = require('../models/message');
 
 module.exports = function(socket, io){
-    if(socket.request.session.passport.user){
+    if(socket.request.session.passport){
         var user = socket.request.session.passport.user.nick;
         Message.find().populate('_user').exec(function(err, messages) {
             if(err) throw err;
